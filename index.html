@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>사단법인 한국비어업인수산자원보호협회 공식 회원 접수</title>
+  <style>
+    :root {
+      --khia-navy: #14428b;
+      --khia-blue: #00a0dc;
+      --khia-red: #dc2626;
+      --khia-bg: #f4f7fb;
+      --card-bg: #ffffff;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      background-color: var(--khia-bg);
+      color: var(--text-dark);
+      padding: 30px 16px;
+      line-height: 1.6;
+    }
+
+    .form-container {
+      max-width: 720px;
+      margin: 0 auto;
+      background-color: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: 0 12px 30px rgba(20, 66, 139, 0.08);
+      overflow: hidden;
+      border: 1px solid rgba(20, 66, 139, 0.1);
+    }
+
+    .brand-header {
+      background: linear-gradient(135deg, var(--khia-navy) 0%, #0c2b5c 100%);
+      color: #ffffff;
+      padding: 40px 24px 30px;
+      text-align: center;
+      position: relative;
+    }
+    .brand-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--khia-blue) 0%, #c8202d 100%);
+    }
+
+    .slogan-tag {
+      display: inline-block;
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--khia-blue);
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+    .brand-header h1 {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+    .brand-header p {
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .form-content { padding: 36px 30px; }
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--khia-navy);
+      border-left: 4px solid var(--khia-blue);
+      padding-left: 10px;
+      margin: 28px 0 18px 0;
+    }
+    .section-title:first-of-type { margin-top: 0; }
+
+    .form-item { margin-bottom: 24px; }
+    .item-label {
+      display: block;
+      font-size: 14.5px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+    }
+    .req-mark { color: var(--khia-red); margin-left: 3px; }
+    .item-desc { font-size: 12.5px; color: var(--text-muted); margin-bottom: 8px; }
+
+    .form-input, .form-select {
+      width: 100%;
+      padding: 12px 14px;
+      font-size: 15px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-input:focus, .form-select:focus { box-shadow: 0 0 0 3px rgba(0, 160, 220, 0.15); }
+    .form-input:read-only { background-color: #f1f5f9; cursor: default; }
+
+    .msg-feedback { font-size: 13px; margin-top: 6px; font-weight: 700; display: none; }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+    }
+    .option-card {
+      display: flex;
+      align-items: center;
+      padding: 11px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13.5px;
+      background: #ffffff;
+      transition: all 0.15s ease;
+    }
+    .option-card:hover { border-color: var(--khia-blue); background-color: #f8fafc; }
+    .option-card input { margin-right: 10px; width: 16px; height: 16px; }
+    .option-card.disabled { opacity: 0.5; pointer-events: none; background-color: #f8fafc; }
+
+    .file-dropzone {
+      border: 2px dashed var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      text-align: center;
+      background: #fafafa;
+      cursor: pointer;
+    }
+    .file-dropzone:hover { border-color: var(--khia-blue); background: #f0f9ff; }
+    .file-dropzone.disabled { opacity: 0.5; pointer-events: none; }
+    .file-dropzone input[type="file"] { display: none; }
+    .file-name-preview { margin-top: 6px; font-size: 13px; font-weight: 600; color: var(--khia-navy); }
+
+    .btn-action {
+      padding: 11px 16px;
+      background-color: var(--khia-navy);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .input-with-button { display: flex; gap: 8px; }
+
+    .submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, var(--khia-navy) 0%, #0d326a 100%);
+      color: #ffffff;
+      border: none;
+      padding: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(20, 66, 139, 0.25);
+      margin-top: 20px;
+    }
+    .submit-btn:disabled { background: #94a3b8; cursor: not-allowed; }
+
+    .success-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(4px);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+    }
+    .success-modal.active { display: flex; }
+    .modal-box {
+      background: #ffffff;
+      max-width: 480px;
+      width: 100%;
+      border-radius: 20px;
+      padding: 30px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    }
+    .modal-icon {
+      width: 60px;
+      height: 60px;
+      background: #ecfdf5;
+      color: #059669;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+      font-size: 28px;
+    }
+    .link-copy-box {
+      background: #f8fafc;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 12px;
+      margin: 16px 0;
+      font-size: 13px;
+      word-break: break-all;
+      color: var(--khia-navy);
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <header class="brand-header">
+      <div class="slogan-tag">상생안 · 호혜성 · 이타성</div>
+      <h1>(사)한국비어업인수산자원보호협회</h1>
+      <p>공식 활동회원 등록 및 자격 검증 신청서</p>
+    </header>
+
+    <form id="khiaMemberForm" class="form-content" autocomplete="off">
+      <div class="section-title">회원 기본 정보</div>
+
+      <div class="form-item">
+        <label class="item-label">프로필 이미지 <span class="req-mark">*</span></label>
+        <p class="item-desc">eKYC 인증 후 협회에서 제공받은 프로필 사진을 등록해 주세요.</p>
+        <div class="file-dropzone" onclick="document.getElementById('file-profile').click()">
+          <span>클릭하여 사진 첨부 (JPG, PNG)</span>
+          <input type="file" id="file-profile" accept="image/*" required>
+          <div id="preview-profile" class="file-name-preview"></div>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="userName">성명 <span class="req-mark">*</span></label>
+        <input type="text" id="userName" class="form-input" placeholder="홍길동" required>
+        <div id="msg-userName" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="userBirth">생년월일 (6자리) <span class="req-mark">*</span></label>
+        <input type="text" id="userBirth" class="form-input" placeholder="예: 921210" maxlength="8" required>
+        <div id="msg-userBirth" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label">소속단체 (다중 선택 가능) <span class="req-mark">*</span></label>
+        <div class="options-grid">
+          <label class="option-card"><input type="checkbox" name="org" value="사단법인 한국비어업인수산자원보호협회"> 사단법인 한국비어업인수산자원보호협회</label>
+          <label class="option-card"><input type="checkbox" name="org" value="대한수중환경보호협회"> 대한수중환경보호협회</label>
+          <label class="option-card"><input type="checkbox" name="org" value="한국스피어피싱협회"> 한국스피어피싱협회</label>
+          <label class="option-card"><input type="checkbox" name="org" value="엘프다이브"> 엘프다이브</label>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label">공무 조회용 실물 정면 사진 <span class="req-mark">*</span></label>
+        <div class="file-dropzone" onclick="document.getElementById('file-memberPhoto').click()">
+          <span>클릭하여 고화질 정면 사진 첨부</span>
+          <input type="file" id="file-memberPhoto" accept="image/*" required>
+          <div id="preview-memberPhoto" class="file-name-preview"></div>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="identityAuth">신원인증 <span class="req-mark">*</span></label>
+        <select id="identityAuth" class="form-select" required>
+          <option value="">선택해 주세요</option>
+          <option value="eKYC 인증완료">eKYC 인증완료</option>
+          <option value="미인증">미인증</option>
+        </select>
+      </div>
+
+      <div class="section-title">안전 교육 및 보유 자격</div>
+
+      <div class="form-item">
+        <label class="item-label">안전교육이수 (다중 선택 가능) <span class="req-mark">*</span></label>
+        <div class="options-grid">
+          <label class="option-card"><input type="checkbox" name="safetyEdu" value="수중형_연안체험활동안전교육"> 수중형_연안체험활동안전교육</label>
+          <label class="option-card"><input type="checkbox" name="safetyEdu" value="수상형_연안체험활동안전교육"> 수상형_연안체험활동안전교육</label>
+          <label class="option-card"><input type="checkbox" name="safetyEdu" value="통합형_연안체험활동안전교육"> 통합형_연안체험활동안전교육</label>
+          <label class="option-card"><input type="checkbox" name="safetyEdu" value="미이수" id="edu-none"> 미이수</label>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label">보유 자격 (다중 선택 가능)</label>
+        <div class="options-grid">
+          <label class="option-card"><input type="checkbox" name="qual" value="수중레저교육자_프리다이빙"> 수중레저교육자_프리다이빙</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="수중레저교육자_스쿠버다이빙"> 수중레저교육자_스쿠버다이빙</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="해경청_안전관리요원_수중형"> 해경청_안전관리요원_수중형</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="해경청_안전관리요원_통합형_수료"> 해경청_안전관리요원_통합형_수료</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="응급처치_강사"> 응급처치_강사</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="응급처치(CPR/EFR/AED)"> 응급처치(CPR/EFR/AED)</label>
+          <label class="option-card"><input type="checkbox" name="qual" value="미취득" id="qual-none"> 미취득</label>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label">자격증빙 서류 사본</label>
+        <div class="file-dropzone" id="dropzone-cert" onclick="document.getElementById('file-cert').click()">
+          <span>클릭하여 자격증 사본 첨부 (이미지/PDF)</span>
+          <input type="file" id="file-cert" accept="image/*,application/pdf">
+          <div id="preview-cert" class="file-name-preview"></div>
+        </div>
+      </div>
+
+      <div class="section-title">어업신고 유무</div>
+
+      <div class="form-item">
+        <label class="item-label">어업신고유무 (다중 선택 가능) <span class="req-mark">*</span></label>
+        <div class="options-grid">
+          <label class="option-card"><input type="checkbox" name="fishery" value="맨손어업신고완료"> 맨손어업신고완료</label>
+          <label class="option-card"><input type="checkbox" name="fishery" value="나잠어업신고완료"> 나잠어업신고완료</label>
+          <label class="option-card"><input type="checkbox" name="fishery" value="없음" id="fishery-none"> 없음</label>
+        </div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label">어업신고증 사본</label>
+        <div class="file-dropzone" id="dropzone-fishery" onclick="document.getElementById('file-fishery').click()">
+          <span>클릭하여 어업신고증 사본 첨부</span>
+          <input type="file" id="file-fishery" accept="image/*,application/pdf">
+          <div id="preview-fishery" class="file-name-preview"></div>
+        </div>
+      </div>
+
+      <div class="section-title">활동 위치 및 연락처</div>
+
+      <div class="form-item">
+        <label class="item-label" for="activeLocation">활동 등록 위치 (GPS) <span class="req-mark">*</span></label>
+        <div class="input-with-button">
+          <input type="text" id="activeLocation" class="form-input" placeholder="[현재 위치 가져오기] 버튼을 눌러주세요" readonly required>
+          <button type="button" class="btn-action" onclick="fetchCurrentLocation()">현재 위치 가져오기</button>
+        </div>
+        <div id="msg-activeLocation" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="phone">휴대전화 <span class="req-mark">*</span></label>
+        <input type="tel" id="phone" class="form-input" placeholder="01012345678" maxlength="15" required>
+        <div id="msg-phone" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="emergencyPhone">비상 연락처 (가족) <span class="req-mark">*</span></label>
+        <input type="tel" id="emergencyPhone" class="form-input" placeholder="01012345678" maxlength="15" required>
+        <div id="msg-emergencyPhone" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="cafeId">네이버 카페 ID <span class="req-mark">*</span></label>
+        <input type="text" id="cafeId" class="form-input" placeholder="abc@naver.com" required>
+        <div id="msg-cafeId" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="cafeNickname">협회 카페 닉네임 <span class="req-mark">*</span></label>
+        <input type="text" id="cafeNickname" class="form-input" placeholder="카페 닉네임" required>
+        <div id="msg-cafeNickname" class="msg-feedback"></div>
+      </div>
+
+      <div class="form-item">
+        <label class="item-label" for="submissionDate">제출일시</label>
+        <input type="text" id="submissionDate" class="form-input" readonly required>
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">신청서 최종 제출하기</button>
+    </form>
+  </div>
+
+  <div id="successModal" class="success-modal">
+    <div class="modal-box">
+      <div class="modal-icon">✓</div>
+      <h2 style="font-size: 20px; font-weight: 800; color: #0f172a; margin-bottom: 8px;">신청서 접수 완료!</h2>
+      <p style="font-size: 13px; color: #64748b; line-height: 1.5;">
+        회원님의 공식 자격 인증 카드가 생성되었습니다.<br />
+        아래 전용 링크를 통해 실시간 심사 상태와 디지털 회원증을 확인하실 수 있습니다.
+      </p>
+
+      <div id="modalLinkBox" class="link-copy-box">생성 중...</div>
+
+      <div style="display: flex; gap: 8px; margin-top: 20px;">
+        <button type="button" id="copyLinkBtn" style="flex: 1; padding: 12px; background: #e2e8f0; color: #1e293b; border: none; border-radius: 10px; font-weight: 700; cursor: pointer;">
+          링크 복사
+        </button>
+        <a id="goToCardBtn" href="#" style="flex: 1; padding: 12px; background: var(--khia-navy); color: #ffffff; text-decoration: none; border-radius: 10px; font-weight: 700; display: inline-block;">
+          내 카드 열람
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ⚠️ 아래 변수에 배포된 Google Apps Script 웹 앱 URL(exec)을 대입하세요.
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycby_0r5L_wemJWifqZgyhaxLouMZeySurXnOkSe_Cb9g44jOw5lFaOan8GYbosT2H0ns/exec";
+
+    const COLOR_AQUA = '#00a0dc';
+    const COLOR_RED  = '#dc2626';
+
+    function showValid(inputEl, msgEl, text) {
+      inputEl.style.borderColor = COLOR_AQUA;
+      msgEl.style.display = 'block';
+      msgEl.style.color = COLOR_AQUA;
+      msgEl.textContent = text || '올바른 형식입니다.';
+    }
+
+    function showInvalid(inputEl, msgEl, text) {
+      inputEl.style.borderColor = COLOR_RED;
+      msgEl.style.display = 'block';
+      msgEl.style.color = COLOR_RED;
+      msgEl.textContent = text;
+    }
+
+    function clearFeedback(inputEl, msgEl) {
+      inputEl.style.borderColor = '#cbd5e1';
+      msgEl.style.display = 'none';
+    }
+
+    function setAutoTimestamp() {
+      const now = new Date();
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('submissionDate').value = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())} ${pad(now.getHours())}:${pad(now.getMinutes())}:${pad(now.getSeconds())}`;
+    }
+    window.addEventListener('DOMContentLoaded', setAutoTimestamp);
+
+    const nameInput = document.getElementById('userName');
+    const nameMsg = document.getElementById('msg-userName');
+    function validateName() {
+      const clean = nameInput.value.trim().replace(/\s+/g, '');
+      if (!clean) { clearFeedback(nameInput, nameMsg); return false; }
+      const isHangul = /^[가-힣]{2,5}$/.test(clean);
+      if (isHangul) { showValid(nameInput, nameMsg); return true; }
+      else { showInvalid(nameInput, nameMsg, '한글 2~5글자의 실명을 입력해 주세요.'); return false; }
+    }
+    nameInput.addEventListener('input', validateName);
+
+    const birthInput = document.getElementById('userBirth');
+    const birthMsg = document.getElementById('msg-userBirth');
+    function validateBirth() {
+      const clean = birthInput.value.replace(/[^0-9]/g, '');
+      if (clean.length === 6) { showValid(birthInput, birthMsg); return true; }
+      else { showInvalid(birthInput, birthMsg, '생년월일 6자리 숫자를 입력해 주세요.'); return false; }
+    }
+    birthInput.addEventListener('input', validateBirth);
+
+    const phoneInput = document.getElementById('phone');
+    const phoneMsg = document.getElementById('msg-phone');
+    function validatePhone() {
+      const clean = phoneInput.value.replace(/[^0-9]/g, '');
+      if (clean.startsWith('010') && clean.length === 11) { showValid(phoneInput, phoneMsg); return true; }
+      else { showInvalid(phoneInput, phoneMsg, '010으로 시작하는 11자리 번호를 입력해 주세요.'); return false; }
+    }
+    phoneInput.addEventListener('input', validatePhone);
+
+    const emergInput = document.getElementById('emergencyPhone');
+    const emergMsg = document.getElementById('msg-emergencyPhone');
+    function validateEmerg() {
+      const clean = emergInput.value.replace(/[^0-9]/g, '');
+      if (clean.startsWith('010') && clean.length === 11) { showValid(emergInput, emergMsg); return true; }
+      else { showInvalid(emergInput, emergMsg, '010으로 시작하는 11자리 번호를 입력해 주세요.'); return false; }
+    }
+    emergInput.addEventListener('input', validateEmerg);
+
+    const cafeIdInput = document.getElementById('cafeId');
+    const cafeIdMsg = document.getElementById('msg-cafeId');
+    function validateCafeId() {
+      const clean = cafeIdInput.value.trim().toLowerCase();
+      if (clean.endsWith('@naver.com') && clean.length > 10) { showValid(cafeIdInput, cafeIdMsg); return true; }
+      else { showInvalid(cafeIdInput, cafeIdMsg, '@naver.com 형식으로 입력해 주세요.'); return false; }
+    }
+    cafeIdInput.addEventListener('input', validateCafeId);
+
+    const nickInput = document.getElementById('cafeNickname');
+    const nickMsg = document.getElementById('msg-cafeNickname');
+    function validateNickname() {
+      if (nickInput.value.trim().length >= 2) { showValid(nickInput, nickMsg); return true; }
+      else { showInvalid(nickInput, nickMsg, '2글자 이상 입력해 주세요.'); return false; }
+    }
+    nickInput.addEventListener('input', validateNickname);
+
+    function fetchCurrentLocation() {
+      const locInput = document.getElementById('activeLocation');
+      const locMsg = document.getElementById('msg-activeLocation');
+      if (!navigator.geolocation) { alert('GPS를 지원하지 않는 브라우저입니다.'); return; }
+      locInput.value = '조회 중...';
+      navigator.geolocation.getCurrentPosition(
+        pos => {
+          locInput.value = `위도: ${pos.coords.latitude.toFixed(5)}, 경도: ${pos.coords.longitude.toFixed(5)}`;
+          showValid(locInput, locMsg);
+        },
+        () => {
+          locInput.value = '';
+          showInvalid(locInput, locMsg, '위치 권한 승인이 필요합니다.');
+        },
+        { enableHighAccuracy: true, timeout: 10000 }
+      );
+    }
+
+    function setupFilePreview(inputId, previewId) {
+      document.getElementById(inputId).addEventListener('change', function() {
+        document.getElementById(previewId).textContent = this.files && this.files[0] ? '선택됨: ' + this.files[0].name : '';
+      });
+    }
+    setupFilePreview('file-profile', 'preview-profile');
+    setupFilePreview('file-memberPhoto', 'preview-memberPhoto');
+    setupFilePreview('file-cert', 'preview-cert');
+    setupFilePreview('file-fishery', 'preview-fishery');
+
+    const eduNone = document.getElementById('edu-none');
+    const eduBoxes = document.querySelectorAll('input[name="safetyEdu"]');
+    eduBoxes.forEach(box => {
+      box.addEventListener('change', function() {
+        if (this === eduNone && this.checked) eduBoxes.forEach(b => { if (b !== eduNone) b.checked = false; });
+        else if (this.checked && eduNone.checked) eduNone.checked = false;
+      });
+    });
+
+    const qualNone = document.getElementById('qual-none');
+    const qualBoxes = document.querySelectorAll('input[name="qual"]');
+    const certDropzone = document.getElementById('dropzone-cert');
+    const certFileInput = document.getElementById('file-cert');
+    qualBoxes.forEach(box => {
+      box.addEventListener('change', function() {
+        if (this === qualNone && this.checked) qualBoxes.forEach(b => { if (b !== qualNone) b.checked = false; });
+        else if (this.checked && qualNone.checked) qualNone.checked = false;
+        const isNone = qualNone.checked || Array.from(qualBoxes).every(b => !b.checked);
+        if (isNone) {
+          certDropzone.classList.add('disabled');
+          certFileInput.value = '';
+          document.getElementById('preview-cert').textContent = '';
+        } else {
+          certDropzone.classList.remove('disabled');
+        }
+      });
+    });
+
+    const fisheryNone = document.getElementById('fishery-none');
+    const fisheryBoxes = document.querySelectorAll('input[name="fishery"]');
+    const fisheryDropzone = document.getElementById('dropzone-fishery');
+    const fisheryFileInput = document.getElementById('file-fishery');
+    fisheryBoxes.forEach(box => {
+      box.addEventListener('change', function() {
+        if (this === fisheryNone && this.checked) fisheryBoxes.forEach(b => { if (b !== fisheryNone) b.checked = false; });
+        else if (this.checked && fisheryNone.checked) fisheryNone.checked = false;
+        const isNone = fisheryNone.checked || Array.from(fisheryBoxes).every(b => !b.checked);
+        if (isNone) {
+          fisheryDropzone.classList.add('disabled');
+          fisheryFileInput.value = '';
+          document.getElementById('preview-fishery').textContent = '';
+        } else {
+          fisheryDropzone.classList.remove('disabled');
+        }
+      });
+    });
+
+    function fileToBase64(file) {
+      return new Promise((resolve) => {
+        if (!file) return resolve(null);
+        const reader = new FileReader();
+        reader.onload = () => resolve({ name: file.name, type: file.type, data: reader.result });
+        reader.readAsDataURL(file);
+      });
+    }
+
+    document.getElementById('khiaMemberForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      if (!validateName()) { nameInput.focus(); return; }
+      if (!validateBirth()) { birthInput.focus(); return; }
+      if (!validatePhone()) { phoneInput.focus(); return; }
+      if (!validateEmerg()) { emergInput.focus(); return; }
+      if (!validateCafeId()) { cafeIdInput.focus(); return; }
+      if (!validateNickname()) { nickInput.focus(); return; }
+
+      const locVal = document.getElementById('activeLocation').value.trim();
+      if (!locVal || locVal.includes('조회 중')) { alert('현재 위치를 등록해 주세요.'); return; }
+
+      const orgs = Array.from(document.querySelectorAll('input[name="org"]:checked')).map(el => el.value);
+      if (orgs.length === 0) { alert('소속단체를 선택해 주세요.'); return; }
+
+      const edus = Array.from(document.querySelectorAll('input[name="safetyEdu"]:checked')).map(el => el.value);
+      if (edus.length === 0) { alert('안전교육이수 항목을 선택해 주세요.'); return; }
+
+      const fisheries = Array.from(document.querySelectorAll('input[name="fishery"]:checked')).map(el => el.value);
+      if (fisheries.length === 0) { alert('어업신고유무 항목을 선택해 주세요.'); return; }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerText = '인증 카드 생성 및 데이터 저장 중...';
+
+      try {
+        const [profileImg, memberPhoto, certDoc, fisheryDoc] = await Promise.all([
+          fileToBase64(document.getElementById('file-profile').files[0]),
+          fileToBase64(document.getElementById('file-memberPhoto').files[0]),
+          fileToBase64(document.getElementById('file-cert').files[0]),
+          fileToBase64(document.getElementById('file-fishery').files[0])
+        ]);
+
+        const quals = Array.from(document.querySelectorAll('input[name="qual"]:checked')).map(el => el.value);
+        setAutoTimestamp();
+
+        // 현재 웹사이트(GitHub Pages)의 기본 경로 계산
+        const currentOrigin = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
+        const payload = {
+          clientOrigin: currentOrigin,
+          profileImg: profileImg,
+          name: nameInput.value.replace(/\s+/g, ''),
+          birth: birthInput.value.replace(/[^0-9]/g, ''),
+          organizations: orgs.join(', '),
+          memberPhoto: memberPhoto,
+          identityAuth: document.getElementById('identityAuth').value,
+          safetyEdu: edus.join(', '),
+          qualifications: quals.join(', '),
+          certDoc: certDoc,
+          fisheryReport: fisheries.join(', '),
+          fisheryDoc: fisheryDoc,
+          cafeId: cafeIdInput.value.trim(),
+          cafeNickname: nickInput.value.trim(),
+          activeLocation: locVal,
+          phone: phoneInput.value.replace(/[^0-9]/g, ''),
+          emergencyPhone: emergInput.value.replace(/[^0-9]/g, ''),
+          submissionDate: document.getElementById('submissionDate').value.trim()
+        };
+
+        // Google Apps Script Headless API 호출 (text/plain 페이로드로 CORS 사전 요청 회피)
+        const response = await fetch(GAS_API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify(payload)
+        });
+
+        const res = await response.json();
+        submitBtn.disabled = false;
+        submitBtn.innerText = '신청서 최종 제출하기';
+
+        if (res.success) {
+          document.getElementById('khiaMemberForm').reset();
+          setAutoTimestamp();
+
+          const viewUrl = `${currentOrigin}/view.html?code=${res.memberCode}`;
+          document.getElementById('modalLinkBox').innerText = viewUrl;
+          document.getElementById('goToCardBtn').href = viewUrl;
+          document.getElementById('copyLinkBtn').onclick = function() {
+            navigator.clipboard.writeText(viewUrl);
+            this.innerText = '복사 완료!';
+            setTimeout(() => this.innerText = '링크 복사', 2000);
+          };
+          document.getElementById('successModal').classList.add('active');
+        } else {
+          alert('접수 처리 실패: ' + res.message);
+        }
+      } catch (err) {
+        submitBtn.disabled = false;
+        submitBtn.innerText = '신청서 최종 제출하기';
+        alert('통신 오류: ' + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

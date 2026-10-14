@@ -69,7 +69,7 @@
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">공식 회원 자격 인증서 로드 중...</p>
+      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">인증 회원 자격 인증서 로드 중...</p>
       <p style="font-size: 12px; color: #64748B; margin-top: 6px;">잠시만 기다려 주세요.</p>
     </div>
     <style>
@@ -269,7 +269,7 @@
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
             <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-sm font-bold text-[#14428B] tracking-tight">공식 회원 자격 인증서 로드 중...</p>
+            <p className="text-sm font-bold text-[#14428B] tracking-tight">인증 회원 자격 인증서 로드 중...</p>
             <p className="text-xs text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
@@ -300,7 +300,7 @@
       
       const themeMasterClass = isApproved ? 'theme-gold-master' : isRejected ? 'theme-bronze-master' : 'theme-silver-master';
       const themePlateClass = isApproved ? 'theme-gold-plate' : isRejected ? 'theme-bronze-plate' : 'theme-silver-plate';
-      const themeLabelText = isApproved ? '공식 자격 승인 완료' : isRejected ? '서류 보완 요청 중' : '자격 심사 진행 중';
+      const themeLabelText = isApproved ? '자격 승인 완료' : isRejected ? '서류 보완 요청 중' : '자격 심사 진행 중';
 
       const displayIssueDate = isApproved ? (member.issueDate || '승인 완료') : '승인 대기';
       const currentBirthDisplay = isUnmasked ? unmaskedBirth : member.birth;
@@ -372,7 +372,7 @@
                     사단법인 한국비어업인수산자원보호협회
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
-                    공식 회원 자격 인증서
+                    인증 회원 자격 인증서
                   </h1>
                 </div>
                 <div className="self-start sm:self-auto">

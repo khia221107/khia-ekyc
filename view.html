@@ -307,37 +307,45 @@
       };
 
       /**
-       * 승인된 경우 발급일자를 "NNNN년" 줄바꿈 "NN월 NN일"(띄어쓰기 1칸)로 표기하는 함수
+       * [폭 맞춤 전용 함수]
+       * '발급일자', '2026년', '10월 15일', '승인 대기'의 좌우 폭을 똑같이 맞춰줍니다.
        */
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
+        // 1. 승인 대기 상태일 때: '발급일자' 폭에 맞춰 '승인'과 '대기'를 양끝 정렬
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
-            <span className="text-amber-300 font-black tracking-normal">
-              {dateStr || '승인 대기'}
-            </span>
+            <div className="w-full flex items-center justify-between text-amber-300 font-black text-xs tracking-tighter leading-tight">
+              <span>승인</span>
+              <span>대기</span>
+            </div>
           );
         }
 
-        // 연(4자리+년), 월(1~2자리+월), 일(1~2자리+일)을 각각 분리
-        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)\$/);
+        // 2. 승인 완료 상태일 때: '2026년'과 '10월 15일'을 같은 폭 안에 꽉 차게 정렬
+        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)$/);
         if (match) {
           return (
-            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-normal leading-tight">
-              <span>{match[1]}</span>
-              {/* match[2](월)와 match[3](일) 사이에 스페이스바 딱 한 칸만 적용 */}
-              <span>{`${match[2]} ${match[3]}`}</span>
+            <div className="w-full flex flex-col items-stretch text-amber-300 font-black leading-tight space-y-0.5">
+              {/* 첫째 줄: 2026년 (발급일자 폭과 자연스럽게 일치) */}
+              <div className="w-full flex items-center justify-between text-xs tracking-normal">
+                <span>{match[1].slice(0, 4)}</span>
+                <span>년</span>
+              </div>
+              {/* 둘째 줄: 10월 15일 (10월과 15일 사이 간격을 좁혀 윗줄 폭과 100% 일치) */}
+              <div className="w-full flex items-center justify-between text-[11px] tracking-tighter">
+                <span>{match[2]}</span>
+                <span>{match[3]}</span>
+              </div>
             </div>
           );
         }
 
         return (
-          <span className="text-amber-300 font-black tracking-normal">
+          <span className="text-amber-300 font-black text-xs tracking-tighter">
             {dateStr}
           </span>
         );
       };
-
-
       
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
@@ -551,18 +559,26 @@
                 </div>
               </div>
 
-              {/* 발급일자 2줄 & OFFICIAL VERIFIED / MEMBER 일렬 정렬 */}
-              <div className="relative z-10 mt-5 pt-4 font-mono">
-                <div className="text-[11px] text-slate-400 font-semibold tracking-tight mb-1">발급일자</div>
-                <div className="flex items-start justify-between text-xs">
-                  {renderIssueDateFormatted(displayIssueDate, isApproved)}
-                  <div className="flex flex-col items-start text-left font-bold tracking-widest text-amber-300 uppercase leading-tight">
+              {/* 발급일자 & 2026년 & 10월 15일 (또는 승인 대기) 가로 폭 100% 일치 영역 */}
+              <div className="relative z-10 mt-5 pt-4">
+                <div className="flex items-end justify-between text-xs">
+                  
+                  {/* 좌측 블록: 고정폭(w-[52px]) 안에서 '발급일자', '2026년', '10월 15일'의 좌우 끝선을 수직으로 완벽히 맞춤 */}
+                  <div className="inline-flex flex-col items-stretch w-[52px]">
+                    <div className="w-full flex items-center justify-between text-[11px] text-slate-400 font-semibold mb-1 leading-none">
+                      <span>발</span><span>급</span><span>일</span><span>자</span>
+                    </div>
+                    {renderIssueDateFormatted(displayIssueDate, isApproved)}
+                  </div>
+
+                  {/* 우측 블록: OFFICIAL VERIFIED / MEMBER (O와 M 수직 일렬 맞춤) */}
+                  <div className="flex flex-col items-start text-left font-mono font-bold tracking-widest text-amber-300 uppercase leading-tight">
                     <span>OFFICIAL VERIFIED</span>
                     <span>MEMBER</span>
                   </div>
+
                 </div>
               </div>
-            </div>
 
             {/* ========================================================
                 [1순위] 안전관리요원 자격 증명 (파스텔 컬러 + 자격증 1:1 매칭)

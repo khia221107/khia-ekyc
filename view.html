@@ -217,7 +217,39 @@
         }
       };
 
-      // 📍 모바일에서 '제'와 'G'를 완벽히 수직 정렬하는 렌더러
+      // 📍 [3번 수정] 발급일자: 2026년 아래 10월 14일 수직 열 정렬 & 인증코드 골드 컬러 일치
+      const renderIssueDateDisplay = (dateStr) => {
+        if (!dateStr || dateStr === '승인 대기') {
+          return <span className="text-amber-300 font-black tracking-wider">{dateStr || '승인 대기'}</span>;
+        }
+        const match = dateStr.match(/^(\d{4}년)\s*(.*)$/);
+        if (match) {
+          return (
+            <div className="inline-flex flex-col text-amber-300 font-black leading-tight text-left">
+              <span>{match[1]}</span>
+              <span>{match[2]}</span>
+            </div>
+          );
+        }
+        return <span className="text-amber-300 font-black tracking-wider">{dateStr}</span>;
+      };
+
+      // 📍 [8번 수정] 소속 단체별 전용 파스텔 톤 뱃지 스타일 매핑 함수
+      const getOrgBadgeStyle = (orgName) => {
+        const clean = String(orgName).trim();
+        if (clean.includes('한국비어업인수산자원보호협회')) {
+          return 'bg-sky-50 text-sky-800 border-sky-200'; // 아쿠아블루
+        } else if (clean.includes('대한수중환경보호협회')) {
+          return 'bg-teal-50 text-teal-800 border-teal-200'; // 아쿠아그린
+        } else if (clean.includes('한국스피어피싱협회')) {
+          return 'bg-rose-50 text-rose-800 border-rose-200'; // 아쿠아레드
+        } else if (clean.includes('엘프다이브')) {
+          return 'bg-purple-50 text-purple-800 border-purple-200'; // 아쿠아보라
+        }
+        return 'bg-slate-50 text-slate-800 border-slate-200';
+      };
+
+      // 📍 모바일에서 '제'와 'G'를 수학적으로 완벽히 수직 정렬하는 렌더러
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -283,9 +315,14 @@
       
       const themeMasterClass = isApproved ? 'theme-gold-master' : isRejected ? 'theme-bronze-master' : 'theme-silver-master';
       const themePlateClass = isApproved ? 'theme-gold-plate' : isRejected ? 'theme-bronze-plate' : 'theme-silver-plate';
-      const themeLabelText = isApproved ? 'GOLD TIER VERIFIED' : isRejected ? 'BRONZE TIER (RECHECK)' : 'PLATINUM TIER PENDING';
+      
+      // 📍 [1번 수정] 한글 추천 1안 적용: 품격 있는 공인 정회원 자구
+      const themeLabelText = isApproved ? '공식 1급 정회원 인증' : isRejected ? '서류 보완 재검토' : '자격 검증 심사 대기';
       const displayIssueDate = isApproved ? (member.issueDate || '승인 완료') : '승인 대기';
       const currentBirthDisplay = isUnmasked ? unmaskedBirth : member.birth;
+
+      // 📍 [6번 수정] 주소에서 "대한민국" 단어 제거
+      const cleanAddress = (member.activeAddress || '').replace(/^대한민국\s*/, '');
 
       const splitBadges = (str) => {
         if (!str || str.trim() === '') return [];
@@ -295,16 +332,10 @@
       return (
         <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
           
-          {/* ========================================================
-              [상단 글로벌 헤더] 
-              1. max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 통일 (메탈 박스와 우측 끝 완전 일치)
-              2. "공무 확인용" Verification 아래 단독 한 줄 배치
-              3. "2차 인증" 버튼 헤더에서 완전 삭제
-             ======================================================== */}
+          {/* 상단 글로벌 헤더 */}
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
               
-              {/* 좌측: 로고 + 타이틀 + 아래 줄 "공무 확인용" */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 shrink-0">
                   <ShieldCheck className="w-6 h-6" />
@@ -321,7 +352,6 @@
                 </div>
               </div>
 
-              {/* 우측: 2차 인증 삭제 완료 -> "링크 복사" 버튼만 깔끔하게 배치 */}
               <button
                 onClick={copyOfficialCardUrl}
                 className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
@@ -332,7 +362,7 @@
             </div>
           </header>
 
-          {/* 메인 컨테이너: 헤더와 동일한 px-4 sm:px-6 lg:px-8 마진 구조 */}
+          {/* 메인 컨테이너 */}
           <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
             
             {/* ========================================================
@@ -342,14 +372,15 @@
               <div className="absolute inset-0 metallic-shimmer pointer-events-none"></div>
 
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/15">
-                <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-black tracking-widest uppercase shadow-md ${themePlateClass}`}>
+                {/* 📍 [2번 수정] 사단법인 한국비어업인수산자원보호협회를 "공식 회원 자격 증명서" 바로 위에 위치 */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-black tracking-wider shadow-md ${themePlateClass}`}>
                       {themeLabelText}
                     </span>
-                    <span className="text-[11px] font-bold tracking-wider text-slate-300">
-                      사단법인 한국비어업인수산자원보호협회
-                    </span>
+                  </div>
+                  <div className="text-xs sm:text-sm font-bold tracking-wider text-slate-300">
+                    사단법인 한국비어업인수산자원보호협회
                   </div>
                   <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
                     공식 회원 자격 증명서
@@ -403,21 +434,27 @@
                 </div>
               </div>
 
-              <div className="relative z-10 mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-[11px] text-slate-300 font-mono">
-                <span>발급일자: {displayIssueDate}</span>
-                <span className="font-bold tracking-widest text-slate-200 uppercase">OFFICIAL VERIFIED MEMBER</span>
+              {/* 📍 [3번, 4번 수정] 발급일자: 2026년 아래 10월 14일 수직 열 정렬 & OFFICIAL VERIFIED MEMBER 골드 폰트 컬러 일치 */}
+              <div className="relative z-10 mt-6 pt-4 border-t border-white/15 flex items-center justify-between text-[11px] font-mono">
+                <div className="flex items-start gap-1.5">
+                  <span className="text-slate-300 shrink-0">발급일자:</span>
+                  {renderIssueDateDisplay(displayIssueDate)}
+                </div>
+                <span className="font-bold tracking-widest text-amber-300 uppercase">
+                  OFFICIAL VERIFIED MEMBER
+                </span>
               </div>
             </div>
 
             {/* ========================================================
-                [1순위] 야간 입수 안전 및 즉각 신원 대조 (순백색 + 가로선 리스트)
+                [1순위] 📍 [5번 수정] 안전관리요원 자격 증명 (명칭 변경)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shadow-2xs">
                   <Zap className="w-4 h-4" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900 tracking-tight">야간 입수 안전 및 즉각 신원 대조</h3>
+                <h3 className="text-base font-bold text-slate-900 tracking-tight">안전관리요원 자격 증명</h3>
               </div>
 
               <div className="divide-y divide-slate-100 text-sm">
@@ -535,7 +572,7 @@
             </div>
 
             {/* ========================================================
-                [2순위] 어업신고 유무 (순백색 + 가로선 리스트)
+                [2순위] 어업신고 유무
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
@@ -587,7 +624,7 @@
             </div>
 
             {/* ========================================================
-                [3순위] 활동 등록 위치 (순백색 + 가로선 리스트)
+                [3순위] 📍 [6번 수정] 활동 등록 위치 ("대한민국" 삭제 완료)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
@@ -609,7 +646,7 @@
                 <div className="py-4 flex flex-col gap-1">
                   <span className="text-xs font-semibold text-slate-500">등록 도로명/지번 주소</span>
                   <span className="text-sm sm:text-base font-bold text-slate-900">
-                    {member.activeAddress || '주소 변환 결과 없음 (위경도 좌표 기준)'}
+                    {cleanAddress || '주소 변환 결과 없음 (위경도 좌표 기준)'}
                   </span>
                 </div>
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
@@ -622,7 +659,7 @@
             </div>
 
             {/* ========================================================
-                [4순위] 비상 연락망 (순백색 + 가로선 리스트)
+                [4순위] 📍 [7번 수정] 비상 연락망 ("마스킹 해제"로 텍스트 정돈)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
@@ -642,7 +679,7 @@
                     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 transition shadow-2xs"
                   >
                     <Lock className="w-3.5 h-3.5 text-amber-700" />
-                    <span>2차 인증 (마스킹 해제)</span>
+                    <span>마스킹 해제</span>
                   </button>
                 ) : (
                   <span className="flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300">
@@ -669,7 +706,7 @@
             </div>
 
             {/* ========================================================
-                [5순위] 협회 소속 및 커뮤니티 신원 (순백색 + 가로선 리스트)
+                [5순위] 📍 [8번 수정] 협회 소속 및 커뮤니티 신원 (각기 다른 파스텔 톤 뱃지)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100">
@@ -678,11 +715,12 @@
               </div>
 
               <div className="divide-y divide-slate-100 text-sm">
+                {/* 📍 소속단체별 아쿠아블루/아쿠아그린/아쿠아레드/아쿠아보라 파스텔 톤 적용 */}
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-500 shrink-0">소속 단체</span>
-                  <div className="flex flex-wrap gap-1">
+                  <div className="flex flex-wrap gap-1.5">
                     {splitBadges(member.organization).map((org, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded-lg bg-slate-50 border border-slate-200 text-slate-800 text-xs font-semibold">
+                      <span key={i} className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-2xs ${getOrgBadgeStyle(org)}`}>
                         {org}
                       </span>
                     ))}

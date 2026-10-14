@@ -306,40 +306,39 @@
         return <NetIcon className="w-4 h-4 text-cyan-700 shrink-0" />;
       };
 
-      const renderStatusIcon = (status) => {
-        if (status === 'APPROVED') {
-          return <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />;
-        }
-        if (status === 'REJECTED' || status === 'RETAKE_REQUESTED') {
-          return <XCircle className="w-3.5 h-3.5 shrink-0" />;
-        }
-        return <Clock className="w-3.5 h-3.5 shrink-0" />;
-      };
-
+      /**
+       * 승인된 경우 발급일자를 "NNNN년" 줄바꿈 "NN월 NN일"(띄어쓰기 1칸)로 표기하는 함수
+       */
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
-            <span className="text-amber-300 font-black tracking-wider">
+            <span className="text-amber-300 font-black tracking-normal">
               {dateStr || '승인 대기'}
             </span>
           );
         }
-        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(.+)$/);
+
+        // 연(4자리+년), 월(1~2자리+월), 일(1~2자리+일)을 각각 분리
+        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)\$/);
         if (match) {
           return (
-            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-wider leading-tight">
+            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-normal leading-tight">
               <span>{match[1]}</span>
-              <span>{match[2]}</span>
+              {/* match[2](월)와 match[3](일) 사이에 스페이스바 딱 한 칸만 적용 */}
+              <span>{`${match[2]} ${match[3]}`}</span>
             </div>
           );
         }
+
         return (
-          <span className="text-amber-300 font-black tracking-wider">
+          <span className="text-amber-300 font-black tracking-normal">
             {dateStr}
           </span>
         );
       };
 
+
+      
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (

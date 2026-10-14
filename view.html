@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KHIA 공식 회원 자격 인증 카드</title>
   
-  <!-- 안정적인 글로벌 CDN 로드 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -17,7 +16,6 @@
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
     }
 
-    /* 최상단 VIP 메탈릭 마스터 플레이트 테마 */
     .theme-gold-master {
       background: linear-gradient(135deg, #1C1917 0%, #292524 45%, #1C1917 100%);
       border: 1.5px solid #EAB308;
@@ -48,7 +46,6 @@
       color: #7C2D12;
     }
 
-    /* 메탈릭 브러시드 하이라이트 애니메이션 */
     .metallic-shimmer {
       background: linear-gradient(
         110deg,
@@ -69,7 +66,6 @@
 </head>
 <body class="bg-[#F8FAFC] text-slate-900 antialiased selection:bg-[#14428B] selection:text-white min-h-screen flex flex-col justify-between">
 
-  <!-- 초기 로딩 스피너 -->
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
@@ -85,7 +81,7 @@
     const { useState, useEffect } = React;
 
     // ⚠️ 아래에 본인의 실제 배포된 Google Apps Script Web App URL(exec)을 대입하세요.
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzdMV7VGHUks7g3AQS_HPfc5mq43t3fdTrJWRbGsuIzRLq7NAcChDiHfCNv15R9CjOA/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxNnbrREJ0ZS61h2EabukqkjqUYwaPuBinLaZEtSLFbUVdo_SzaOHxlOQ8DygtV5QEG/exec";
 
     const IconWrapper = ({ children, className = "w-4 h-4", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
@@ -124,7 +120,6 @@
       const [copied, setCopied] = useState(false);
       const [codeCopied, setCodeCopied] = useState(false);
 
-      // 2차 인증 상태 관리
       const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
       const [birthInput, setBirthInput] = useState('');
       const [authError, setAuthError] = useState('');
@@ -133,7 +128,6 @@
       const [unmaskedPhone, setUnmaskedPhone] = useState('');
       const [unmaskedEmerg, setUnmaskedEmerg] = useState('');
 
-      // 이미지 라이트박스
       const [previewImage, setPreviewImage] = useState(null);
 
       useEffect(() => {
@@ -217,7 +211,42 @@
         }
       };
 
-      // 소속 단체별 전용 파스텔 톤 뱃지 스타일 매핑 함수
+      // 📍 [2번 수정] 0 누락 방지 및 010-****-5678 하이픈 정규화 헬퍼 함수
+      const formatDisplayPhone = (phoneStr, isMasked = false) => {
+        if (!phoneStr || phoneStr === '-') return '-';
+        let raw = String(phoneStr).trim();
+
+        // 1. 이미 마스킹(010-****-5678 형태)된 경우
+        if (raw.includes('*')) {
+          if (raw.startsWith('10-') || raw.startsWith('10*')) {
+            raw = '0' + raw;
+          }
+          return raw;
+        }
+
+        // 2. 숫자만 있는 경우
+        let clean = raw.replace(/[^0-9]/g, '');
+        if (clean.length === 10 && clean.startsWith('10')) {
+          clean = '0' + clean;
+        }
+
+        if (isMasked) {
+          if (clean.length === 11) {
+            return `${clean.substring(0, 3)}-****-${clean.substring(7)}`;
+          } else if (clean.length === 10) {
+            return `${clean.substring(0, 3)}-***-${clean.substring(6)}`;
+          }
+          return clean;
+        } else {
+          if (clean.length === 11) {
+            return `${clean.substring(0, 3)}-${clean.substring(3, 7)}-${clean.substring(7)}`;
+          } else if (clean.length === 10) {
+            return `${clean.substring(0, 3)}-${clean.substring(3, 6)}-${clean.substring(6)}`;
+          }
+          return clean;
+        }
+      };
+
       const getOrgBadgeStyle = (orgName) => {
         const clean = String(orgName).trim();
         if (clean.includes('한국비어업인수산자원보호협회')) {
@@ -232,7 +261,6 @@
         return 'bg-slate-50 text-slate-800 border-slate-200';
       };
 
-      // 모바일에서 '제'와 'G'를 수학적으로 완벽히 수직 정렬하는 렌더러
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -267,7 +295,7 @@
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
             <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-sm font-bold text-[#14428B] tracking-tight">공식 회원 자격 인증 카드 로드 중...</p>
+            <p className="text-sm font-bold text-[#14428B] tracking-tight">공식 회원 자격 인증서 로드 중...</p>
             <p className="text-xs text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
@@ -299,7 +327,6 @@
       const themeMasterClass = isApproved ? 'theme-gold-master' : isRejected ? 'theme-bronze-master' : 'theme-silver-master';
       const themePlateClass = isApproved ? 'theme-gold-plate' : isRejected ? 'theme-bronze-plate' : 'theme-silver-plate';
       
-      // 📍 [1번 수정] 추천 2안 반영: 공식 자격 승인 완료 / 자격 심사 진행 중 / 서류 보완 요청 중
       const themeLabelText = isApproved 
         ? '공식 자격 승인 완료' 
         : isRejected 
@@ -309,6 +336,15 @@
       const displayIssueDate = isApproved ? (member.issueDate || '승인 완료') : '승인 대기';
       const currentBirthDisplay = isUnmasked ? unmaskedBirth : member.birth;
       const cleanAddress = (member.activeAddress || '').replace(/^대한민국\s*/, '');
+
+      // 📍 전화번호 안전 포맷팅 적용
+      const currentPhoneDisplay = isUnmasked 
+        ? formatDisplayPhone(unmaskedPhone, false) 
+        : formatDisplayPhone(member.phone, true);
+
+      const currentEmergDisplay = isUnmasked 
+        ? formatDisplayPhone(unmaskedEmerg, false) 
+        : formatDisplayPhone(member.emergencyPhone, true);
 
       const splitBadges = (str) => {
         if (!str || str.trim() === '') return [];
@@ -360,7 +396,6 @@
               <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-white/15">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2 mb-1">
-                    {/* 📍 [1번 수정] 뱃지 자구 */}
                     <span className={`px-2.5 py-0.5 rounded-md text-[10px] font-black tracking-wider shadow-md ${themePlateClass}`}>
                       {themeLabelText}
                     </span>
@@ -368,7 +403,6 @@
                   <div className="text-xs sm:text-sm font-bold tracking-wider text-slate-300">
                     사단법인 한국비어업인수산자원보호협회
                   </div>
-                  {/* 📍 [2번 수정] 공식 회원 자격 인증서로 명칭 수정 */}
                   <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md">
                     공식 회원 자격 인증서
                   </h1>
@@ -410,9 +444,9 @@
                   </div>
                   
                   <div className="flex flex-wrap items-center gap-2 pt-1">
-                    {/* 📍 [3번 수정] "인증코드:" 폰트색을 소속단체와 동일하게 text-slate-400 font-semibold 로 일치 */}
+                    {/* 📍 [1번 수정] "인증코드:" 폰트도 골드 컬러(text-amber-300)로 완전 일치 */}
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/50 border border-white/20 text-xs font-mono font-bold text-white shadow-inner">
-                      <span className="text-slate-400 font-semibold">인증코드:</span>
+                      <span className="text-amber-300 font-bold">인증코드:</span>
                       <span className="text-amber-300 font-black tracking-wider">{member.code}</span>
                     </div>
                     <span className="px-3 py-1 rounded-xl bg-white/10 border border-white/20 text-xs font-bold text-emerald-300">
@@ -422,7 +456,7 @@
                 </div>
               </div>
 
-              {/* 📍 [4번 수정] 발급일자 아래에 날짜 표기, 같은 라인 우측에 OFFICIAL VERIFIED MEMBER 표기 */}
+              {/* 발급일자 및 OFFICIAL VERIFIED MEMBER */}
               <div className="relative z-10 mt-6 pt-4 border-t border-white/15 font-mono">
                 <div className="text-[10px] text-slate-400 font-medium tracking-tight">발급일자</div>
                 <div className="flex items-center justify-between mt-0.5 text-[11px]">
@@ -436,9 +470,7 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [1순위] 안전관리요원 자격 증명
-               ======================================================== */}
+            {/* [1순위] 안전관리요원 자격 증명 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shadow-2xs">
@@ -561,9 +593,7 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [2순위] 어업신고 유무
-               ======================================================== */}
+            {/* [2순위] 어업신고 유무 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-800 shadow-2xs">
@@ -613,9 +643,7 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [3순위] 활동 등록 위치
-               ======================================================== */}
+            {/* [3순위] 활동 등록 위치 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -648,13 +676,9 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [4순위] 📍 [5번 수정] 현장 긴급 구호 (응급 상황 연락 & 마스킹 해제 1줄 고정)
-               ======================================================== */}
+            {/* [4순위] 📍 [2번 수정] 비상 연락망 (0 누락 방지 및 010-****-5678 출력) */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
-                
-                {/* 좌측: 현장 긴급 구호 아래 응급 상황 연락 */}
                 <div className="flex items-center gap-3 min-w-0">
                   <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-800 shadow-2xs shrink-0">
                     <Phone className="w-4 h-4" />
@@ -665,7 +689,6 @@
                   </div>
                 </div>
 
-                {/* 우측: 마스킹 해제 버튼 (줄바꿈 없이 1줄로 표시) */}
                 {!isUnmasked ? (
                   <button
                     onClick={() => { setAuthError(''); setBirthInput(''); setIsAuthModalOpen(true); }}
@@ -685,22 +708,20 @@
               <div className="divide-y divide-slate-100 text-sm">
                 <div className="py-4 flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500">회원 본인 휴대전화</span>
-                  <a href={`tel:${isUnmasked ? unmaskedPhone : member.phone}`} className="text-sm sm:text-base font-bold font-mono text-[#14428B] hover:underline transition">
-                    📞 {isUnmasked ? unmaskedPhone : member.phone}
+                  <a href={`tel:${currentPhoneDisplay.replace(/[^0-9]/g, '')}`} className="text-sm sm:text-base font-bold font-mono text-[#14428B] hover:underline transition">
+                    📞 {currentPhoneDisplay}
                   </a>
                 </div>
                 <div className="py-4 flex items-center justify-between">
                   <span className="text-xs font-semibold text-slate-500">가족 비상 연락처 (사고 대비)</span>
-                  <a href={`tel:${isUnmasked ? unmaskedEmerg : member.emergencyPhone}`} className="text-sm sm:text-base font-bold font-mono text-rose-600 hover:underline transition">
-                    🚨 {isUnmasked ? unmaskedEmerg : member.emergencyPhone}
+                  <a href={`tel:${currentEmergDisplay.replace(/[^0-9]/g, '')}`} className="text-sm sm:text-base font-bold font-mono text-rose-600 hover:underline transition">
+                    🚨 {currentEmergDisplay}
                   </a>
                 </div>
               </div>
             </div>
 
-            {/* ========================================================
-                [5순위] 협회 소속 및 커뮤니티 신원
-               ======================================================== */}
+            {/* [5순위] 협회 소속 및 커뮤니티 신원 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100">
                 <h3 className="text-base font-bold text-slate-900">협회 소속 및 커뮤니티 신원</h3>
@@ -760,15 +781,11 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [6순위] 심사 이력 및 보안키 (모바일 '제'와 'G' 수직 정렬 완료)
-               ======================================================== */}
+            {/* [6순위] 심사 이력 및 보안키 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 space-y-2">
                 <h3 className="text-base font-bold text-slate-900">심사 이력 및 공식 인증 보안키</h3>
                 <p className="text-xs text-slate-500">협회 사무국 심사 결과 및 위·변조 방지 식별 코드입니다.</p>
-                
-                {/* 📍 '제출일시'의 '제' 바로 아래에 'GMT'의 'G'가 오차 없이 정렬되는 블록 */}
                 {renderSubmissionDate(member.submissionDate)}
               </div>
 
@@ -805,7 +822,7 @@
 
           </main>
 
-          {/* 🌟 고해상도 이미지 라이트박스 */}
+          {/* 고해상도 이미지 라이트박스 */}
           {previewImage && (
             <div 
               onClick={() => setPreviewImage(null)}

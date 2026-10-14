@@ -75,7 +75,7 @@
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
       <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 회원 인증서 로드 중...</p>
-      <p style="font-size: 12px; color: #64748B; margin-top: 6px;">잠시만 기다려 주세요.</p>
+      <p style="font-size: 12px; color: #64748B; margin-top: 6px;">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
     </div>
     <style>
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -85,7 +85,7 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // 현재 배포된 Google Apps Script Web App URL(exec) 유지
+    // 배포된 Google Apps Script Web App URL(exec)
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzodwjN_GXrxC5SBdx9RKes9Rd60ynf_qLoirGb6t08kpGUFHSFWpJUhcbFSTC9Oro/exec";
 
     const IconWrapper = ({ children, className = "w-4 h-4", ...props }) => (
@@ -94,7 +94,6 @@
       </svg>
     );
 
-    // 1. 어업 신고 유무 상단 헤더용 "그물(Fishing Net)" 아이콘
     const NetIcon = ({ className = "w-4 h-4", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M3 5c6 2 12 2 18 0" />
@@ -109,7 +108,6 @@
       </svg>
     );
 
-    // 2. 맨손어업신고완료 전용 "호미(Hand Hoe)" 아이콘
     const HoeIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M14 3c-4.5 0-8.5 3-9.5 7.5 3.5 1 7.5-.5 9.5-3.5 1-1.5 1-3 0-4Z" fill="currentColor" fillOpacity="0.18" />
@@ -118,7 +116,6 @@
       </svg>
     );
 
-    // 3. 나잠어업신고완료 전용 "잠수용 마스크(Diving Mask)" 아이콘
     const DivingMaskIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M3 8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-2.5l-1.5-2-1.5 2H6a3 3 0 0 1-3-3V8Z" fill="currentColor" fillOpacity="0.15" />
@@ -272,7 +269,6 @@
         return 'bg-slate-50 text-slate-800 border-slate-200';
       };
 
-      // 안전교육 4종별 파스텔 컬러 매핑
       const getSafetyEduBadgeStyle = (eduName) => {
         const clean = String(eduName).trim();
         if (clean.includes('일반형')) return 'bg-sky-50 text-sky-800 border-sky-200';
@@ -282,7 +278,6 @@
         return 'bg-blue-50 text-blue-800 border-blue-200';
       };
 
-      // 보유 자격 최대 5개까지 각각 다른 파스텔 컬러 지정 (자격명 기반 고정 매칭 포함)
       const getQualificationBadgeStyle = (index) => {
         const palette = [
           'bg-purple-50 text-purple-800 border-purple-200',
@@ -294,7 +289,6 @@
         return palette[Math.max(0, index) % palette.length];
       };
 
-      // 어업 신고 항목별 호미 / 잠수용 마스크 아이콘 반환
       const renderFisheryItemIcon = (labelStr) => {
         const clean = String(labelStr || '').trim();
         if (clean.includes('맨손')) {
@@ -306,47 +300,40 @@
         return <NetIcon className="w-4 h-4 text-cyan-700 shrink-0" />;
       };
 
-      /**
-       * [폭 맞춤 전용 함수]
-       * '발급일자', '2026년', '10월 15일', '승인 대기'의 좌우 폭을 똑같이 맞춰줍니다.
-       */
+      const renderStatusIcon = (status) => {
+        if (status === 'APPROVED') {
+          return <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />;
+        }
+        if (status === 'REJECTED' || status === 'RETAKE_REQUESTED') {
+          return <XCircle className="w-3.5 h-3.5 shrink-0" />;
+        }
+        return <Clock className="w-3.5 h-3.5 shrink-0" />;
+      };
+
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
-        // 1. 승인 대기 상태일 때: '발급일자' 폭에 맞춰 '승인'과 '대기'를 양끝 정렬
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
-            <div className="w-full flex items-center justify-between text-amber-300 font-black text-xs tracking-tighter leading-tight">
-              <span>승인</span>
-              <span>대기</span>
-            </div>
+            <span className="text-amber-300 font-black tracking-wider">
+              {dateStr || '승인 대기'}
+            </span>
           );
         }
-
-        // 2. 승인 완료 상태일 때: '2026년'과 '10월 15일'을 같은 폭 안에 꽉 차게 정렬
         const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)$/);
         if (match) {
           return (
-            <div className="w-full flex flex-col items-stretch text-amber-300 font-black leading-tight space-y-0.5">
-              {/* 첫째 줄: 2026년 (발급일자 폭과 자연스럽게 일치) */}
-              <div className="w-full flex items-center justify-between text-xs tracking-normal">
-                <span>{match[1].slice(0, 4)}</span>
-                <span>년</span>
-              </div>
-              {/* 둘째 줄: 10월 15일 (10월과 15일 사이 간격을 좁혀 윗줄 폭과 100% 일치) */}
-              <div className="w-full flex items-center justify-between text-[11px] tracking-tighter">
-                <span>{match[2]}</span>
-                <span>{match[3]}</span>
-              </div>
+            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-wider leading-tight">
+              <span>{match[1]}</span>
+              <span>{`${match[2]} ${match[3]}`}</span>
             </div>
           );
         }
-
         return (
-          <span className="text-amber-300 font-black text-xs tracking-tighter">
+          <span className="text-amber-300 font-black tracking-wider">
             {dateStr}
           </span>
         );
       };
-      
+
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -382,7 +369,6 @@
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
             <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
             <p className="text-sm font-bold text-[#14428B] tracking-tight">등록 회원 인증서 로드 중...</p>
-            {/* 원하시는 복호화 안내 문구로 복원 */}
             <p className="text-xs text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
@@ -441,7 +427,6 @@
       return (
         <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
           
-          {/* 최상단 글로벌 헤더: 왼쪽 아이콘에 logo.png 적용 */}
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -482,10 +467,8 @@
             </div>
           </header>
 
-          {/* 메인 컨테이너 */}
           <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 space-y-6">
             
-            {/* [최상단] 마스터 메탈릭 VIP 자격 플레이트 */}
             <div className={`relative rounded-[32px] p-6 sm:p-8 text-white overflow-hidden transition-all ${themeMasterClass}`}>
               <div className="absolute inset-0 metallic-shimmer pointer-events-none"></div>
 
@@ -500,7 +483,6 @@
                   </span>
                 </div>
 
-                {/* 타이틀 + 타이틀 폭과 동일한 1:1 정사각형 라운딩 회원사진 묶음 */}
                 <div className="pt-1">
                   <div className="inline-flex flex-col items-stretch">
                     <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap">
@@ -526,7 +508,6 @@
                   </div>
                 </div>
 
-                {/* 사진 아래: 이름 -> 생년월일 -> 소속단체 */}
                 <div className="pt-4 space-y-2.5">
                   <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-sm">
                     {member.name}
@@ -560,30 +541,18 @@
                 </div>
               </div>
 
-              {/* 발급일자 & 2026년 & 10월 15일 (또는 승인 대기) 가로 폭 100% 일치 영역 */}
-              <div className="relative z-10 mt-5 pt-4">
-                <div className="flex items-end justify-between text-xs">
-                  
-                  {/* 좌측 블록: 고정폭(w-[52px]) 안에서 '발급일자', '2026년', '10월 15일'의 좌우 끝선을 수직으로 완벽히 맞춤 */}
-                  <div className="inline-flex flex-col items-stretch w-[52px]">
-                    <div className="w-full flex items-center justify-between text-[11px] text-slate-400 font-semibold mb-1 leading-none">
-                      <span>발</span><span>급</span><span>일</span><span>자</span>
-                    </div>
-                    {renderIssueDateFormatted(displayIssueDate, isApproved)}
-                  </div>
-
-                  {/* 우측 블록: OFFICIAL VERIFIED / MEMBER (O와 M 수직 일렬 맞춤) */}
-                  <div className="flex flex-col items-start text-left font-mono font-bold tracking-widest text-amber-300 uppercase leading-tight">
+              <div className="relative z-10 mt-5 pt-4 font-mono">
+                <div className="text-[11px] text-slate-400 font-semibold tracking-tight mb-1">발급일자</div>
+                <div className="flex items-start justify-between text-xs">
+                  {renderIssueDateFormatted(displayIssueDate, isApproved)}
+                  <div className="flex flex-col items-start text-left font-bold tracking-widest text-amber-300 uppercase leading-tight">
                     <span>OFFICIAL VERIFIED</span>
                     <span>MEMBER</span>
                   </div>
-
                 </div>
               </div>
+            </div>
 
-            {/* ========================================================
-                [1순위] 안전관리요원 자격 증명 (파스텔 컬러 + 자격증 1:1 매칭)
-               ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shadow-2xs">
@@ -596,7 +565,6 @@
               </div>
 
               <div className="divide-y divide-slate-100 text-sm">
-                {/* 안전교육 이수 내역: 유형별 파스텔 톤 */}
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-500 shrink-0">연안체험활동 법정 안전교육 이수 내역</span>
                   <div className="flex flex-wrap gap-1.5">
@@ -611,7 +579,6 @@
                   </div>
                 </div>
 
-                {/* 보유 자격: 최대 5개 각각 다른 파스텔 톤 */}
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-500 shrink-0">보유 자격</span>
                   <div className="flex flex-wrap gap-1.5">
@@ -626,7 +593,6 @@
                   </div>
                 </div>
 
-                {/* 공무 조회용 실물 정면 사진 */}
                 <div className="py-5 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -660,7 +626,6 @@
                   </div>
                 </div>
 
-                {/* 항목별 매칭 자격 증빙 서류 (위 안전교육·보유자격 파스텔 색상과 1:1 동기화) */}
                 <div className="pt-5 space-y-4">
                   <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-purple-600" /> 항목별 매칭 자격 증빙 서류 ({certDocItems.length}건)
@@ -672,7 +637,6 @@
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {certDocItems.map((doc, idx) => {
                         const isPdf = doc.mimeType === 'application/pdf' || (doc.dataUri && doc.dataUri.startsWith('data:application/pdf'));
-                        // 보유자격 목록에서의 순서를 찾아 상단 뱃지 색상과 1:1 일치시킴
                         const qualMatchIdx = qualList.findIndex(q => q === doc.label);
                         const badgeStyle = doc.category === '안전교육'
                           ? getSafetyEduBadgeStyle(doc.label)
@@ -718,9 +682,6 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [2순위] 어업 신고 유무 (그물 / 호미 / 잠수마스크 아이콘 + 1:1 서류 매칭)
-               ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-800 shadow-2xs">
@@ -754,7 +715,6 @@
                   </div>
                 </div>
 
-                {/* 어업 신고증 증빙 서류 */}
                 <div className="pt-5 space-y-4">
                   <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업 신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
                   {fisheryDocItems.length === 0 ? (
@@ -800,7 +760,6 @@
               </div>
             </div>
 
-            {/* [3순위] 주요 활동 지역 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
@@ -833,7 +792,6 @@
               </div>
             </div>
 
-            {/* [4순위] 현장 긴급 구호 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
@@ -878,7 +836,6 @@
               </div>
             </div>
 
-            {/* [5순위] 소속 및 커뮤니티 신원 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100">
                 <h3 className="text-base font-bold text-slate-900">소속 및 커뮤니티 신원</h3>
@@ -933,7 +890,6 @@
               </div>
             </div>
 
-            {/* [6순위] 심사 이력 및 공식 인증 보안키 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 space-y-2">
                 <h3 className="text-base font-bold text-slate-900">심사 이력 및 공식 인증 보안키</h3>
@@ -972,7 +928,6 @@
               </div>
             </div>
 
-            {/* 1.5배 확대한 "협회 카페 바로가기" 버튼 + 필기체 손글씨 슬로건 */}
             <div className="pt-6 pb-4 flex flex-col items-center justify-center text-center space-y-3">
               <a
                 href="https://cafe.naver.com/khia230712"
@@ -989,7 +944,6 @@
 
           </main>
 
-          {/* 고해상도 이미지 & PDF 통합 라이트박스 모달 */}
           {previewDoc && (
             <div 
               onClick={() => setPreviewDoc(null)}
@@ -1025,7 +979,6 @@
             </div>
           )}
 
-          {/* 2차 본인/공무 인증 모달 */}
           {isAuthModalOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="max-w-sm w-full p-6 rounded-3xl shadow-2xl bg-white border border-slate-200 text-slate-900">
@@ -1074,7 +1027,6 @@
             </div>
           )}
 
-          {/* 하단 푸터 */}
           <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-4 shadow-2xs">
             <p className="font-semibold text-slate-700">사단법인 한국비어업인수산자원보호협회 (KHIA) eKYC 통합 관리 체계</p>
             <p className="mt-1 text-[11px] font-mono text-slate-400">본 인증서는 공무 확인 용도로 실시간 검증됩니다.</p>

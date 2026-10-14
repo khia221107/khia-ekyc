@@ -76,7 +76,7 @@
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">KHIA 등록 회원 인증서 로드 중...</p>
+      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 회원 인증서 로드 중...</p>
       <p style="font-size: 12px; color: #64748B; margin-top: 6px;">잠시만 기다려 주세요.</p>
     </div>
     <style>
@@ -88,7 +88,7 @@
     const { useState, useEffect } = React;
 
     // 배포된 Google Apps Script Web App URL(exec)
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvLtxJ97qQm6BY6-Nx0bzJKBt-IfIq3M4JkBFhbW2GZTzhOhaC2gF6JLuXvm00PVhR/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbz8Axo8L3tKO8bgqQJZCVvBJRdlFqAjtupS4Q-kINPkCkqr7KIkrNsqiydLqoXYWh2J/exec";
 
     const IconWrapper = ({ children, className = "w-4 h-4", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
@@ -126,6 +126,7 @@
       const [errorMsg, setErrorMsg] = useState('');
       const [copied, setCopied] = useState(false);
       const [codeCopied, setCodeCopied] = useState(false);
+      const [logoLoadError, setLogoLoadError] = useState(false);
 
       const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
       const [birthInput, setBirthInput] = useState('');
@@ -233,7 +234,6 @@
         }
       };
 
-      // 소속 단체별 파스텔 톤 뱃지 스타일 (상단 메탈 카드 & 하단 커뮤니티 카드 공통 사용)
       const getOrgBadgeStyle = (orgName) => {
         const clean = String(orgName).trim();
         if (clean.includes('한국비어업인수산자원보호협회')) return 'bg-sky-50 text-sky-800 border-sky-200';
@@ -243,7 +243,6 @@
         return 'bg-slate-50 text-slate-800 border-slate-200';
       };
 
-      // 승인 현황 아이콘 반환 헬퍼 (골드/실버/브론즈 박스 안 좌측 표시용)
       const renderStatusIcon = (status) => {
         if (status === 'APPROVED') {
           return <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />;
@@ -252,6 +251,33 @@
           return <XCircle className="w-3.5 h-3.5 shrink-0" />;
         }
         return <Clock className="w-3.5 h-3.5 shrink-0" />;
+      };
+
+      /**
+       * [요청 1 반영] 승인된 경우 발급일자를 "NNNN년" 줄바꿈 "NN월 NN일"로 표기
+       */
+      const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
+        if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
+          return (
+            <span className="text-amber-300 font-black tracking-wider">
+              {dateStr || '승인 대기'}
+            </span>
+          );
+        }
+        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(.+)$/);
+        if (match) {
+          return (
+            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-wider leading-tight">
+              <span>{match[1]}</span>
+              <span>{match[2]}</span>
+            </div>
+          );
+        }
+        return (
+          <span className="text-amber-300 font-black tracking-wider">
+            {dateStr}
+          </span>
+        );
       };
 
       const renderSubmissionDate = (dateStr) => {
@@ -288,7 +314,7 @@
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
             <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-sm font-bold text-[#14428B] tracking-tight">KHIA 등록 회원 인증서 로드 중...</p>
+            <p className="text-sm font-bold text-[#14428B] tracking-tight">등록 회원 인증서 로드 중...</p>
             <p className="text-xs text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
@@ -346,14 +372,27 @@
         <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
           
           {/* ========================================================
-              [수정 2 반영] 상단 글로벌 헤더:
-              "KHIA eKYC Verification" 아래에 "사단법인 한국비어업인수산자원보호협회" 배치 (text-slate-400)
+              [요청 2 반영] 최상단 글로벌 헤더: 왼쪽 아이콘에 logo.png 적용
              ======================================================== */}
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 shrink-0">
-                  <ShieldCheck className="w-6 h-6" />
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 overflow-hidden border border-blue-200 shrink-0">
+                  {!logoLoadError ? (
+                    <img
+                      src="logo.png"
+                      alt="KHIA 로고"
+                      className="w-full h-full object-cover"
+                      onError={() => setLogoLoadError(true)}
+                    />
+                  ) : (
+                    <svg viewBox="0 0 48 48" fill="none" className="w-7 h-7 text-amber-300">
+                      <circle cx="24" cy="12" r="5" stroke="currentColor" strokeWidth="2.5"/>
+                      <line x1="24" y1="17" x2="24" y2="40" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+                      <path d="M12 28h-3a15 15 0 0 0 30 0h-3" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
+                      <path d="M10 20c-2 4-2 10 2 15M38 20c2 4 2 10-2 15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  )}
                 </div>
                 <div className="flex flex-col">
                   <span className="font-extrabold text-base tracking-tight text-slate-900 leading-tight">
@@ -379,12 +418,11 @@
           <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 space-y-6">
             
             {/* ========================================================
-                [수정 2, 3, 4, 5 반영] 최상단 마스터 메탈릭 VIP 자격 플레이트
+                [최상단] 마스터 메탈릭 VIP 자격 플레이트
                ======================================================== */}
             <div className={`relative rounded-[32px] p-6 sm:p-8 text-white overflow-hidden transition-all ${themeMasterClass}`}>
               <div className="absolute inset-0 metallic-shimmer pointer-events-none"></div>
 
-              {/* 상단 헤더 영역: 골드/실버/브론즈 박스(좌측에 승인 아이콘 포함) + 오른쪽에 공무 확인용 박스 */}
               <div className="relative z-10 pb-6 border-b border-white/15 space-y-3">
                 <div className="flex flex-wrap items-center gap-2">
                   <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black tracking-wider shadow-md ${themePlateClass}`}>
@@ -400,12 +438,11 @@
                 <div className="pt-1">
                   <div className="inline-flex flex-col items-stretch">
                     <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap">
-                      KHIA 등록 회원 인증서
+                      등록 회원 인증서
                     </h1>
 
-                    {/* 회원사진: 타이틀 'KHIA 등록 회원 인증서' 폭과 100% 동일한 가로폭 + 1:1 정사각 비율 + 모서리 라운딩 */}
                     <div 
-                      onClick={() => member.profileImg && setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
+                      onClick={() => member.profileImg && setPreviewDoc({ title: '전달 받은 프로필 패치 이미지', src: member.profileImg, isPdf: false })}
                       className="mt-4 relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/40 shadow-2xl bg-zinc-900 cursor-pointer group"
                       title="클릭하여 확대 보기"
                     >
@@ -423,20 +460,17 @@
                   </div>
                 </div>
 
-                {/* 사진 아래: 이름 -> 생년월일 -> 소속단체(하단과 동일한 파스텔 뱃지) 순서 배치 */}
+                {/* 사진 아래: 이름 -> 생년월일 -> 소속단체 */}
                 <div className="pt-4 space-y-2.5">
-                  {/* 1) 이름 */}
                   <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-sm">
                     {member.name}
                   </h2>
 
-                  {/* 2) 생년월일 ("생년월일:" 폰트 컬러는 "발급일자"와 동일한 text-slate-400) */}
                   <div className="flex items-center gap-2 text-sm sm:text-base">
                     <span className="text-slate-400 font-semibold shrink-0">생년월일:</span>
                     <span className="font-bold text-slate-100 font-mono tracking-wider">{currentBirthDisplay}</span>
                   </div>
 
-                  {/* 3) 소속단체 ("소속단체:" 폰트 컬러는 "발급일자"와 동일한 text-slate-400 + 하단과 동일한 파스텔 뱃지) */}
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 pt-0.5">
                     <span className="text-slate-400 font-semibold text-sm sm:text-base shrink-0">소속단체:</span>
                     <div className="flex flex-wrap gap-1.5">
@@ -448,7 +482,6 @@
                     </div>
                   </div>
 
-                  {/* 4) 인증코드 및 신원인증 뱃지 */}
                   <div className="flex flex-wrap items-center gap-2 pt-2">
                     <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/50 border border-white/20 text-xs font-mono font-bold text-white shadow-inner">
                       <span className="text-amber-300 font-bold">인증코드:</span>
@@ -461,22 +494,25 @@
                 </div>
               </div>
 
-              {/* 발급일자 및 OFFICIAL VERIFIED MEMBER */}
+              {/* ========================================================
+                  [요청 1 반영]
+                  - 발급일자 아래: "NNNN년" 줄바꿈 "NN월 NN일"
+                  - 우측: "OFFICIAL VERIFIED" 줄바꿈 "MEMBER" (O와 M 수직 일렬 맞춤)
+                 ======================================================== */}
               <div className="relative z-10 mt-5 pt-4 font-mono">
-                <div className="text-[11px] text-slate-400 font-semibold tracking-tight">발급일자</div>
-                <div className="flex items-center justify-between mt-0.5 text-xs">
-                  <span className="text-amber-300 font-black tracking-wider">
-                    {displayIssueDate}
-                  </span>
-                  <span className="font-bold tracking-widest text-amber-300 uppercase">
-                    OFFICIAL VERIFIED MEMBER
-                  </span>
+                <div className="text-[11px] text-slate-400 font-semibold tracking-tight mb-1">발급일자</div>
+                <div className="flex items-start justify-between text-xs">
+                  {renderIssueDateFormatted(displayIssueDate, isApproved)}
+                  <div className="flex flex-col items-start text-left font-bold tracking-widest text-amber-300 uppercase leading-tight">
+                    <span>OFFICIAL VERIFIED</span>
+                    <span>MEMBER</span>
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* ========================================================
-                [1순위] 안전관리요원 자격 증명 (첨부 이미지 하얀 배경 제거 완료)
+                [1순위] 안전관리요원 자격 증명
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
@@ -518,7 +554,7 @@
                   </div>
                 </div>
 
-                {/* 공무 조회용 실물 정면 사진 (박스 안에 이미지만 딱 들어가게 표시) */}
+                {/* 공무 조회용 실물 정면 사진 */}
                 <div className="py-5 space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -552,7 +588,7 @@
                   </div>
                 </div>
 
-                {/* 항목별 매칭 자격 증빙 서류 (하얀 배경 및 중첩 박스 제거 -> 박스 안에 이미지만 딱 들어가게 통일) */}
+                {/* 항목별 매칭 자격 증빙 서류 */}
                 <div className="pt-5 space-y-4">
                   <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                     <Award className="w-4 h-4 text-purple-600" /> 항목별 매칭 자격 증빙 서류 ({certDocItems.length}건)
@@ -606,7 +642,7 @@
             </div>
 
             {/* ========================================================
-                [2순위] 어업 신고 유무 (첨부 이미지 하얀 배경 제거 완료)
+                [2순위] 이업신고 유무
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
@@ -634,11 +670,11 @@
                   </div>
                 </div>
 
-                {/* 어업 신고증 증빙 서류 (하얀 배경 및 중첩 박스 제거 -> 박스 안에 이미지만 딱 들어가게 통일) */}
+                {/* 어업신고증 증빙 서류 */}
                 <div className="pt-5 space-y-4">
-                  <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업 신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
+                  <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
                   {fisheryDocItems.length === 0 ? (
-                    <p className="text-xs text-slate-400">등록된 어업 신고증 사본 없음</p>
+                    <p className="text-xs text-slate-400">등록된 어업신고증 사본 없음</p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {fisheryDocItems.map((doc, idx) => {
@@ -648,20 +684,20 @@
                             <div className="flex items-center justify-between gap-2">
                               <span className="text-xs font-bold text-slate-900 truncate">⚓ {doc.label}</span>
                               <button
-                                onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
+                                onClick={() => setPreviewDoc({ title: `[어업신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
                                 className="text-[11px] font-bold text-[#14428B] hover:underline shrink-0 flex items-center gap-0.5"
                               >
                                 <ZoomIn className="w-3.5 h-3.5" /> {isPdf ? 'PDF 열람' : '확대 보기'}
                               </button>
                             </div>
                             <div 
-                              onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
+                              onClick={() => setPreviewDoc({ title: `[어업신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
                               className="relative w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
                             >
                               {isPdf ? (
                                 <div className="text-center p-6 bg-slate-50 space-y-1">
                                   <div className="text-2xl">📄</div>
-                                  <div className="text-xs font-bold text-slate-700">PDF 어업 신고증</div>
+                                  <div className="text-xs font-bold text-slate-700">PDF 어업신고증</div>
                                   <div className="text-[11px] text-[#14428B] font-semibold">클릭하여 열람</div>
                                 </div>
                               ) : (
@@ -755,10 +791,10 @@
               </div>
             </div>
 
-            {/* [5순위] 소속 및 커뮤니티 신원 */}
+            {/* [5순위] 협회 소속 및 커뮤니티 신원 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900">소속 및 커뮤니티 신원</h3>
+                <h3 className="text-base font-bold text-slate-900">협회 소속 및 커뮤니티 신원</h3>
                 <p className="text-xs text-slate-500 mt-0.5">협회 회원 확인에 사용됩니다.</p>
               </div>
 
@@ -785,10 +821,10 @@
                 </div>
 
                 <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">프로필 패치 이미지</span>
+                  <span className="text-xs font-semibold text-slate-500">전달 받은 프로필 패치 이미지</span>
                   <div className="flex items-center gap-3">
                     <div 
-                      onClick={() => member.profileImg && setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
+                      onClick={() => member.profileImg && setPreviewDoc({ title: '전달 받은 프로필 패치 이미지', src: member.profileImg, isPdf: false })}
                       className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group relative shrink-0 shadow-2xs"
                     >
                       {member.profileImg ? (
@@ -799,7 +835,7 @@
                     </div>
                     {member.profileImg && (
                       <button
-                        onClick={() => setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
+                        onClick={() => setPreviewDoc({ title: '전달 받은 프로필 패치 이미지', src: member.profileImg, isPdf: false })}
                         className="text-xs font-bold text-[#14428B] hover:underline flex items-center gap-0.5"
                       >
                         <ZoomIn className="w-3.5 h-3.5" /> 확대 보기
@@ -849,9 +885,7 @@
               </div>
             </div>
 
-            {/* ========================================================
-                [수정 1 반영] 1.5배 확대한 "협회 카페 바로가기" 버튼 + 필기체 손글씨 슬로건
-               ======================================================== */}
+            {/* 1.5배 확대한 "협회 카페 바로가기" 버튼 + 필기체 손글씨 슬로건 */}
             <div className="pt-6 pb-4 flex flex-col items-center justify-center text-center space-y-3">
               <a
                 href="https://cafe.naver.com/khia230712"
@@ -904,7 +938,7 @@
             </div>
           )}
 
-          {/* 2차 본인/공무 인증 모달 */}
+          {/* 2차 본인/공무원 인증 모달 */}
           {isAuthModalOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="max-w-sm w-full p-6 rounded-3xl shadow-2xl bg-white border border-slate-200 text-slate-900">
@@ -913,7 +947,7 @@
                     <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
                       <Lock className="w-4 h-4" />
                     </div>
-                    <h3 className="font-bold text-base text-slate-900">2차 본인/공무 인증</h3>
+                    <h3 className="font-bold text-base text-slate-900">2차 본인/공무원 인증</h3>
                   </div>
                   <button onClick={() => setIsAuthModalOpen(false)} className="text-slate-400 hover:text-slate-700">
                     <X className="w-5 h-5" />
@@ -956,7 +990,7 @@
           {/* 하단 푸터 */}
           <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-4 shadow-2xs">
             <p className="font-semibold text-slate-700">사단법인 한국비어업인수산자원보호협회 (KHIA) eKYC 통합 관리 체계</p>
-            <p className="mt-1 text-[11px] font-mono text-slate-400">본 인증서는 공무 확인 용도로 실시간 검증됩니다.</p>
+            <p className="mt-1 text-[11px] font-mono text-slate-400">본 증명서는 공무 확인 용도로 실시간 검증됩니다.</p>
           </footer>
         </div>
       );

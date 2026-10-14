@@ -217,7 +217,7 @@
         }
       };
 
-      // 📍 모바일에서 '제'와 'G'를 수학적으로 완벽히 수직 정렬하는 렌더러
+      // 📍 모바일에서 '제'와 'G'를 완벽히 수직 정렬하는 렌더러
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -294,50 +294,46 @@
 
       return (
         <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
-          {/* 상단 글로벌 헤더 */}
-          <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 px-4 sm:px-8 py-3.5 shadow-xs">
-            <div className="max-w-5xl mx-auto flex items-center justify-between gap-4">
+          
+          {/* ========================================================
+              [상단 글로벌 헤더] 
+              1. max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 통일 (메탈 박스와 우측 끝 완전 일치)
+              2. "공무 확인용" Verification 아래 단독 한 줄 배치
+              3. "2차 인증" 버튼 헤더에서 완전 삭제
+             ======================================================== */}
+          <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
+            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
+              
+              {/* 좌측: 로고 + 타이틀 + 아래 줄 "공무 확인용" */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 shrink-0">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-extrabold text-base tracking-tight text-slate-900">KHIA eKYC Verification</span>
-                    <span className="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 rounded-full border border-blue-200">공무 확인용</span>
+                <div className="flex flex-col">
+                  <span className="font-extrabold text-base tracking-tight text-slate-900 leading-tight">
+                    KHIA eKYC Verification
+                  </span>
+                  <div className="mt-1">
+                    <span className="inline-block px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 rounded-md border border-blue-200">
+                      공무 확인용
+                    </span>
                   </div>
-                  <p className="text-xs text-slate-500 hidden sm:block">사단법인 한국비어업인수산자원보호협회 공식 자격 확인 체계</p>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
-                {!isUnmasked ? (
-                  <button
-                    onClick={() => { setAuthError(''); setBirthInput(''); setIsAuthModalOpen(true); }}
-                    className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition border border-amber-300 shadow-xs"
-                  >
-                    <Lock className="w-3.5 h-3.5 text-amber-700" />
-                    <span>2차 인증</span>
-                  </button>
-                ) : (
-                  <span className="flex items-center gap-1 px-3 py-2 bg-emerald-50 text-emerald-700 text-xs font-bold rounded-xl border border-emerald-300">
-                    <Unlock className="w-3.5 h-3.5" />
-                    <span>인증 해제됨</span>
-                  </span>
-                )}
-
-                <button
-                  onClick={copyOfficialCardUrl}
-                  className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
-                >
-                  {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copied ? '복사됨' : '링크 복사'}</span>
-                </button>
-              </div>
+              {/* 우측: 2차 인증 삭제 완료 -> "링크 복사" 버튼만 깔끔하게 배치 */}
+              <button
+                onClick={copyOfficialCardUrl}
+                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copied ? '복사됨' : '링크 복사'}</span>
+              </button>
             </div>
           </header>
 
-          <main className="flex-1 max-w-5xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+          {/* 메인 컨테이너: 헤더와 동일한 px-4 sm:px-6 lg:px-8 마진 구조 */}
+          <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
             
             {/* ========================================================
                 [최상단] 마스터 메탈릭 VIP 자격 플레이트
@@ -417,7 +413,6 @@
                 [1순위] 야간 입수 안전 및 즉각 신원 대조 (순백색 + 가로선 리스트)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              {/* 헤더: '1순위 검문' 뱃지 삭제 완료 */}
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shadow-2xs">
                   <Zap className="w-4 h-4" />
@@ -425,7 +420,6 @@
                 <h3 className="text-base font-bold text-slate-900 tracking-tight">야간 입수 안전 및 즉각 신원 대조</h3>
               </div>
 
-              {/* 본문: 내부 박스 없이 가로 구분선과 균일한 텍스트로 전환 */}
               <div className="divide-y divide-slate-100 text-sm">
                 
                 {/* 행 1: 안전교육 이수 */}
@@ -872,6 +866,7 @@
       );
     }
 
+    // 상태 뱃지
     function StatusBadge({ status }) {
       switch (status) {
         case 'APPROVED':

@@ -71,6 +71,7 @@
 </head>
 <body class="bg-[#F8FAFC] text-slate-900 antialiased selection:bg-[#14428B] selection:text-white min-h-screen flex flex-col justify-between">
 
+  <!-- 초기 브라우저 로딩 화면 (복호화 안내 문구 적용) -->
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
@@ -85,7 +86,7 @@
   <script type="text/babel">
     const { useState, useEffect } = React;
 
-    // 배포된 Google Apps Script Web App URL(exec)
+    // 배포된 Google Apps Script Web App URL(exec) 유지
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzodwjN_GXrxC5SBdx9RKes9Rd60ynf_qLoirGb6t08kpGUFHSFWpJUhcbFSTC9Oro/exec";
 
     const IconWrapper = ({ children, className = "w-4 h-4", ...props }) => (
@@ -94,6 +95,7 @@
       </svg>
     );
 
+    // 1. 어업 신고 유무 상단 헤더용 "그물(Fishing Net)" 아이콘
     const NetIcon = ({ className = "w-4 h-4", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M3 5c6 2 12 2 18 0" />
@@ -108,6 +110,7 @@
       </svg>
     );
 
+    // 2. 맨손어업신고완료 전용 "호미(Hand Hoe)" 아이콘
     const HoeIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M14 3c-4.5 0-8.5 3-9.5 7.5 3.5 1 7.5-.5 9.5-3.5 1-1.5 1-3 0-4Z" fill="currentColor" fillOpacity="0.18" />
@@ -116,6 +119,7 @@
       </svg>
     );
 
+    // 3. 나잠어업신고완료 전용 "잠수용 마스크(Diving Mask)" 아이콘
     const DivingMaskIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         <path d="M3 8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-2.5l-1.5-2-1.5 2H6a3 3 0 0 1-3-3V8Z" fill="currentColor" fillOpacity="0.15" />
@@ -310,25 +314,37 @@
         return <Clock className="w-3.5 h-3.5 shrink-0" />;
       };
 
+      /**
+       * [날짜 및 승인대기 간격 밀착 조정 함수]
+       * 월과 일, 승인과 대기 사이를 양끝으로 벌리지 않고 자연스럽게 붙여줍니다.
+       */
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
+        // 1. 승인 대기 상태일 때: 승인과 대기 사이를 gap-1(스페이스바 1칸)로 밀착
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
-            <span className="text-amber-300 font-black tracking-wider">
-              {dateStr || '승인 대기'}
-            </span>
-          );
-        }
-        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)$/);
-        if (match) {
-          return (
-            <div className="flex flex-col items-start text-left text-amber-300 font-black tracking-wider leading-tight">
-              <span>{match[1]}</span>
-              <span>{`${match[2]} ${match[3]}`}</span>
+            <div className="inline-flex items-center gap-1 text-amber-300 font-black text-xs tracking-normal leading-tight">
+              <span>승인</span>
+              <span>대기</span>
             </div>
           );
         }
+
+        // 2. 승인 완료 상태일 때: 2026년 아래에 10월과 15일을 gap-1로 밀착
+        const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)\$/);
+        if (match) {
+          return (
+            <div className="flex flex-col items-start text-amber-300 font-black leading-tight space-y-0.5">
+              <span className="text-xs tracking-normal">{match[1]}</span>
+              <div className="inline-flex items-center gap-1 text-xs tracking-normal">
+                <span>{match[2]}</span>
+                <span>{match[3]}</span>
+              </div>
+            </div>
+          );
+        }
+
         return (
-          <span className="text-amber-300 font-black tracking-wider">
+          <span className="text-amber-300 font-black text-xs tracking-normal">
             {dateStr}
           </span>
         );
@@ -364,6 +380,7 @@
         );
       };
 
+      // 리액트 마운트 후 로딩 화면 (복호화 안내 문구 적용)
       if (isLoading) {
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
@@ -384,659 +401,4 @@
             <p className="text-xs text-slate-600 max-w-sm mb-6 leading-relaxed bg-white p-4 rounded-2xl border border-slate-200 shadow-xs">
               {errorMsg || '회원 정보를 찾을 수 없습니다.'}
             </p>
-            <button 
-              onClick={() => window.location.reload()}
-              className="px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-xs font-bold rounded-xl text-white transition shadow-sm"
-            >
-              새로고침
-            </button>
-          </div>
-        );
-      }
-
-      const isApproved = member.status === 'APPROVED';
-      const isRejected = member.status === 'REJECTED' || member.status === 'RETAKE_REQUESTED';
-      
-      const themeMasterClass = isApproved ? 'theme-gold-master' : isRejected ? 'theme-bronze-master' : 'theme-silver-master';
-      const themePlateClass = isApproved ? 'theme-gold-plate' : isRejected ? 'theme-bronze-plate' : 'theme-silver-plate';
-      const themeLabelText = isApproved ? '공식 자격 승인 완료' : isRejected ? '서류 보완 요청 중' : '자격 심사 진행 중';
-
-      const displayIssueDate = isApproved ? (member.issueDate || '승인 완료') : '승인 대기';
-      const currentBirthDisplay = isUnmasked ? unmaskedBirth : member.birth;
-      const cleanAddress = (member.activeAddress || '').replace(/^대한민국\s*/, '');
-
-      const currentPhoneDisplay = isUnmasked 
-        ? formatDisplayPhone(unmaskedPhone, false) 
-        : formatDisplayPhone(member.phone, true);
-
-      const currentEmergDisplay = isUnmasked 
-        ? formatDisplayPhone(unmaskedEmerg, false) 
-        : formatDisplayPhone(member.emergencyPhone, true);
-
-      const splitBadges = (str) => {
-        if (!str || str.trim() === '' || str.includes('없음')) return [];
-        return str.split(',').map(s => s.trim()).filter(Boolean);
-      };
-
-      const orgBadgeList = splitBadges(member.organization || '사단법인 한국비어업인수산자원보호협회');
-      const safetyList = splitBadges(member.safetyEdu);
-      const qualList = splitBadges(member.qualifications);
-      const certDocItems = Array.isArray(member.certDocItems) ? member.certDocItems : [];
-      const fisheryDocItems = Array.isArray(member.fisheryDocItems) ? member.fisheryDocItems : [];
-
-      return (
-        <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
-          
-          <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 overflow-hidden border border-blue-200 shrink-0">
-                  {!logoLoadError ? (
-                    <img
-                      src="logo.png"
-                      alt="KHIA 로고"
-                      className="w-full h-full object-cover"
-                      onError={() => setLogoLoadError(true)}
-                    />
-                  ) : (
-                    <svg viewBox="0 0 48 48" fill="none" className="w-7 h-7 text-amber-300">
-                      <circle cx="24" cy="12" r="5" stroke="currentColor" strokeWidth="2.5"/>
-                      <line x1="24" y1="17" x2="24" y2="40" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                      <path d="M12 28h-3a15 15 0 0 0 30 0h-3" stroke="currentColor" strokeWidth="3" strokeLinecap="round"/>
-                      <path d="M10 20c-2 4-2 10 2 15M38 20c2 4 2 10-2 15" stroke="white" strokeWidth="2" strokeLinecap="round"/>
-                    </svg>
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-extrabold text-base tracking-tight text-slate-900 leading-tight">
-                    KHIA eKYC Verification
-                  </span>
-                  <span className="text-xs font-semibold text-slate-400 mt-0.5 tracking-tight">
-                    사단법인 한국비어업인수산자원보호협회
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={copyOfficialCardUrl}
-                className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold transition shadow-xs active:scale-95 shrink-0"
-              >
-                {copied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? '복사됨' : '링크 복사'}</span>
-              </button>
-            </div>
-          </header>
-
-          <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 space-y-6">
-            
-            <div className={`relative rounded-[32px] p-6 sm:p-8 text-white overflow-hidden transition-all ${themeMasterClass}`}>
-              <div className="absolute inset-0 metallic-shimmer pointer-events-none"></div>
-
-              <div className="relative z-10 pb-6 border-b border-white/15 space-y-3">
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black tracking-wider shadow-md ${themePlateClass}`}>
-                    {renderStatusIcon(member.status)}
-                    <span>{themeLabelText}</span>
-                  </span>
-                  <span className="inline-flex items-center px-2.5 py-1 text-[11px] font-bold bg-blue-500/20 text-blue-200 rounded-lg border border-blue-400/30 backdrop-blur-xs">
-                    공무 확인용
-                  </span>
-                </div>
-
-                <div className="pt-1">
-                  <div className="inline-flex flex-col items-stretch">
-                    <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap">
-                      등록 회원 인증서
-                    </h1>
-
-                    <div 
-                      onClick={() => member.profileImg && setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
-                      className="mt-4 relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/40 shadow-2xl bg-zinc-900 cursor-pointer group"
-                      title="클릭하여 확대 보기"
-                    >
-                      {member.profileImg ? (
-                        <>
-                          <img src={member.profileImg} alt={member.name} className="w-full h-full object-cover transition duration-300 group-hover:scale-105" />
-                          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition">
-                            <ZoomIn className="w-6 h-6 text-white" />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center font-black text-2xl text-white/40">KHIA</div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-4 space-y-2.5">
-                  <h2 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-sm">
-                    {member.name}
-                  </h2>
-
-                  <div className="flex items-center gap-2 text-sm sm:text-base">
-                    <span className="text-slate-400 font-semibold shrink-0">생년월일:</span>
-                    <span className="font-bold text-slate-100 font-mono tracking-wider">{currentBirthDisplay}</span>
-                  </div>
-
-                  <div className="flex flex-col sm:flex-row sm:items-center gap-2 pt-0.5">
-                    <span className="text-slate-400 font-semibold text-sm sm:text-base shrink-0">소속단체:</span>
-                    <div className="flex flex-wrap gap-1.5">
-                      {orgBadgeList.map((org, i) => (
-                        <span key={i} className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-2xs ${getOrgBadgeStyle(org)}`}>
-                          {org}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-2 pt-2">
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-black/50 border border-white/20 text-xs font-mono font-bold text-white shadow-inner">
-                      <span className="text-amber-300 font-bold">인증코드:</span>
-                      <span className="text-amber-300 font-black tracking-wider">{member.code}</span>
-                    </div>
-                    <span className="px-3 py-1 rounded-xl bg-white/10 border border-white/20 text-xs font-bold text-emerald-300">
-                      신원인증 {member.identityAuth}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="relative z-10 mt-5 pt-4 font-mono">
-                <div className="text-[11px] text-slate-400 font-semibold tracking-tight mb-1">발급일자</div>
-                <div className="flex items-start justify-between text-xs">
-                  {renderIssueDateFormatted(displayIssueDate, isApproved)}
-                  <div className="flex flex-col items-start text-left font-bold tracking-widest text-amber-300 uppercase leading-tight">
-                    <span>OFFICIAL VERIFIED</span>
-                    <span>MEMBER</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-700 shadow-2xs">
-                  <Zap className="w-4 h-4" />
-                </div>
-                <div>
-                  <h3 className="text-base font-bold text-slate-900 tracking-tight">안전관리요원 자격 증명</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">연안체험활동 법정 안전교육 이수 내역</p>
-                </div>
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-slate-500 shrink-0">연안체험활동 법정 안전교육 이수 내역</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {safetyList.map((edu, i) => (
-                      <span key={i} className={`px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${getSafetyEduBadgeStyle(edu)}`}>
-                        🎓 {edu}
-                      </span>
-                    ))}
-                    {safetyList.length === 0 && (
-                      <span className="text-xs text-slate-400">이수 내역 없음</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-slate-500 shrink-0">보유 자격</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {qualList.map((qual, i) => (
-                      <span key={i} className={`px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${getQualificationBadgeStyle(i)}`}>
-                        🎖️ {qual}
-                      </span>
-                    ))}
-                    {qualList.length === 0 && (
-                      <span className="text-xs text-slate-400">보유 자격 없음 (미취득)</span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="py-5 space-y-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <ShieldCheck className="w-4 h-4 text-emerald-600" /> 공무 조회용 실물 정면 사진
-                    </span>
-                    {member.memberPhoto && (
-                      <button
-                        onClick={() => setPreviewDoc({ title: '공무 조회용 실물 정면 사진', src: member.memberPhoto, isPdf: false })}
-                        className="text-[11px] font-bold text-[#14428B] hover:underline flex items-center gap-0.5"
-                      >
-                        <ZoomIn className="w-3.5 h-3.5" /> 확대 보기
-                      </button>
-                    )}
-                  </div>
-                  {member.memberPhoto ? (
-                    <div 
-                      onClick={() => setPreviewDoc({ title: '공무 조회용 실물 정면 사진', src: member.memberPhoto, isPdf: false })}
-                      className="relative max-w-md rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
-                    >
-                      <img src={member.memberPhoto} alt="공무용 정면사진" className="w-full h-auto block transition group-hover:scale-102" />
-                    </div>
-                  ) : (
-                    <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-400">
-                      등록된 실물 사진이 없습니다.
-                    </div>
-                  )}
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-slate-600 pt-1">
-                    <div>성명: <b className="text-slate-900">{member.name}</b></div>
-                    <div>생년월일: <b className="font-mono text-slate-900">{currentBirthDisplay}</b></div>
-                    <div>신원인증: <b className="text-emerald-700">{member.identityAuth}</b></div>
-                  </div>
-                </div>
-
-                <div className="pt-5 space-y-4">
-                  <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                    <Award className="w-4 h-4 text-purple-600" /> 항목별 매칭 자격 증빙 서류 ({certDocItems.length}건)
-                  </span>
-
-                  {certDocItems.length === 0 ? (
-                    <p className="text-xs text-slate-400 py-1">해당 내역 없음 (첨부된 자격증빙 서류가 없습니다.)</p>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {certDocItems.map((doc, idx) => {
-                        const isPdf = doc.mimeType === 'application/pdf' || (doc.dataUri && doc.dataUri.startsWith('data:application/pdf'));
-                        const qualMatchIdx = qualList.findIndex(q => q === doc.label);
-                        const badgeStyle = doc.category === '안전교육'
-                          ? getSafetyEduBadgeStyle(doc.label)
-                          : getQualificationBadgeStyle(qualMatchIdx >= 0 ? qualMatchIdx : idx);
-
-                        return (
-                          <div key={idx} className="space-y-2.5">
-                            <div className="flex items-center justify-between gap-2">
-                              <div className="flex items-center gap-1.5 min-w-0">
-                                <span className={`px-2.5 py-0.5 rounded-md border text-[11px] font-bold truncate ${badgeStyle}`}>
-                                  {doc.category === '안전교육' ? '🎓 ' : '🎖️ '}{doc.label}
-                                </span>
-                              </div>
-                              <button
-                                onClick={() => setPreviewDoc({ title: `${doc.label}`, src: doc.dataUri, isPdf })}
-                                className="text-[11px] font-bold text-[#14428B] hover:underline shrink-0 flex items-center gap-0.5"
-                              >
-                                <ZoomIn className="w-3.5 h-3.5" /> {isPdf ? 'PDF 열람' : '확대 보기'}
-                              </button>
-                            </div>
-
-                            <div 
-                              onClick={() => setPreviewDoc({ title: `${doc.label}`, src: doc.dataUri, isPdf })}
-                              className="relative w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
-                            >
-                              {isPdf ? (
-                                <div className="text-center p-6 bg-slate-50 space-y-1">
-                                  <div className="text-2xl">📄</div>
-                                  <div className="text-xs font-bold text-slate-700">PDF 증빙 문서</div>
-                                  <div className="text-[11px] text-[#14428B] font-semibold">클릭하여 전체화면으로 열람</div>
-                                </div>
-                              ) : (
-                                <img src={doc.dataUri} alt={doc.label} className="w-full h-auto block transition group-hover:scale-102" />
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-800 shadow-2xs">
-                  <NetIcon className="w-4.5 h-4.5" />
-                </div>
-                <h3 className="text-base font-bold text-slate-900">어업 신고 유무</h3>
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-slate-500">어업 신고 상태</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {splitBadges(member.fisheryReport).length > 0 ? (
-                      splitBadges(member.fisheryReport).map((rep, i) => {
-                        const isMaenson = rep.includes('맨손');
-                        const badgeColor = isMaenson
-                          ? 'bg-amber-50 border-amber-200 text-amber-900'
-                          : 'bg-cyan-50 border-cyan-200 text-cyan-900';
-                        return (
-                          <span key={i} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${badgeColor}`}>
-                            {renderFisheryItemIcon(rep)}
-                            <span>{rep}</span>
-                          </span>
-                        );
-                      })
-                    ) : (
-                      <span className="text-sm font-bold text-slate-900">
-                        {member.fisheryReport || '어업 신고 없음 (순수 비어업인)'}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                <div className="pt-5 space-y-4">
-                  <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업 신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
-                  {fisheryDocItems.length === 0 ? (
-                    <p className="text-xs text-slate-400">등록된 어업 신고증 사본 없음</p>
-                  ) : (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {fisheryDocItems.map((doc, idx) => {
-                        const isPdf = doc.mimeType === 'application/pdf' || (doc.dataUri && doc.dataUri.startsWith('data:application/pdf'));
-                        return (
-                          <div key={idx} className="space-y-2.5">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-900 truncate">
-                                {renderFisheryItemIcon(doc.label)}
-                                <span className="truncate">{doc.label}</span>
-                              </span>
-                              <button
-                                onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
-                                className="text-[11px] font-bold text-[#14428B] hover:underline shrink-0 flex items-center gap-0.5"
-                              >
-                                <ZoomIn className="w-3.5 h-3.5" /> {isPdf ? 'PDF 열람' : '확대 보기'}
-                              </button>
-                            </div>
-                            <div 
-                              onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
-                              className="relative w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
-                            >
-                              {isPdf ? (
-                                <div className="text-center p-6 bg-slate-50 space-y-1">
-                                  <div className="text-2xl">📄</div>
-                                  <div className="text-xs font-bold text-slate-700">PDF 어업 신고증</div>
-                                  <div className="text-[11px] text-[#14428B] font-semibold">클릭하여 열람</div>
-                                </div>
-                              ) : (
-                                <img src={doc.dataUri} alt={doc.label} className="w-full h-auto block transition group-hover:scale-102" />
-                              )}
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-blue-50 border border-blue-200 flex items-center justify-center text-[#14428B] shadow-2xs">
-                    <MapPin className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <h3 className="text-base font-bold text-slate-900">주요 활동 지역</h3>
-                    <p className="text-xs text-slate-500 mt-0.5">지역 기반 활동을 지원합니다.</p>
-                  </div>
-                </div>
-                <span className="px-2.5 py-0.5 text-[10px] font-bold rounded-lg bg-blue-50 text-blue-800 border border-blue-200">
-                  주소 자동 변환
-                </span>
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex flex-col gap-1">
-                  <span className="text-xs font-semibold text-slate-500">등록 도로명/지번 주소</span>
-                  <span className="text-sm sm:text-base font-bold text-slate-900">
-                    {cleanAddress || '주소 변환 결과 없음 (위경도 좌표 기준)'}
-                  </span>
-                </div>
-                <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                  <span className="text-xs font-semibold text-slate-500">등록 GPS 원본 좌표</span>
-                  <span className="text-xs font-mono text-slate-600 font-medium">
-                    {member.activeLocation || '미등록'}
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100 flex items-center justify-between gap-3">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-800 shadow-2xs shrink-0">
-                    <Phone className="w-4 h-4" />
-                  </div>
-                  <div className="min-w-0">
-                    <h3 className="text-base font-bold text-slate-900 leading-tight">현장 긴급 구호</h3>
-                    <p className="text-xs text-slate-500 mt-0.5 leading-tight">응급 상황 연락</p>
-                  </div>
-                </div>
-
-                {!isUnmasked ? (
-                  <button
-                    onClick={() => { setAuthError(''); setBirthInput(''); setIsAuthModalOpen(true); }}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 transition shadow-2xs shrink-0 whitespace-nowrap"
-                  >
-                    <Lock className="w-3.5 h-3.5 text-amber-700" />
-                    <span>마스킹 해제</span>
-                  </button>
-                ) : (
-                  <span className="flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-800 text-xs font-bold rounded-xl border border-emerald-300 shrink-0 whitespace-nowrap">
-                    <Unlock className="w-3.5 h-3.5 text-emerald-700" />
-                    <span>전체 마스킹 해제됨</span>
-                  </span>
-                )}
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">회원 본인 휴대전화</span>
-                  <a href={`tel:${currentPhoneDisplay.replace(/[^0-9]/g, '')}`} className="text-sm sm:text-base font-bold font-mono text-[#14428B] hover:underline transition">
-                    📞 {currentPhoneDisplay}
-                  </a>
-                </div>
-                <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">가족 비상 연락처 (사고 대비)</span>
-                  <a href={`tel:${currentEmergDisplay.replace(/[^0-9]/g, '')}`} className="text-sm sm:text-base font-bold font-mono text-rose-600 hover:underline transition">
-                    🚨 {currentEmergDisplay}
-                  </a>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100">
-                <h3 className="text-base font-bold text-slate-900">소속 및 커뮤니티 신원</h3>
-                <p className="text-xs text-slate-500 mt-0.5">협회 회원 확인에 사용됩니다.</p>
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span className="text-xs font-semibold text-slate-500 shrink-0">소속 단체</span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {orgBadgeList.map((org, i) => (
-                      <span key={i} className={`px-2.5 py-1 rounded-lg text-xs font-bold border shadow-2xs ${getOrgBadgeStyle(org)}`}>
-                        {org}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">협회 카페 가입 ID</span>
-                  <span className="text-sm font-mono font-medium text-slate-900">{member.cafeId || '-'}</span>
-                </div>
-
-                <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">협회 카페 활동 별명</span>
-                  <span className="text-sm font-bold text-slate-900">{member.cafeNickname || '-'}</span>
-                </div>
-
-                <div className="py-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-slate-500">프로필 패치 이미지</span>
-                  <div className="flex items-center gap-3">
-                    <div 
-                      onClick={() => member.profileImg && setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
-                      className="w-12 h-12 rounded-xl overflow-hidden border border-slate-200 cursor-pointer group relative shrink-0 shadow-2xs"
-                    >
-                      {member.profileImg ? (
-                        <img src={member.profileImg} alt="프로필" className="w-full h-full object-cover transition group-hover:scale-105" />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center font-bold text-[10px] text-slate-400">KHIA</div>
-                      )}
-                    </div>
-                    {member.profileImg && (
-                      <button
-                        onClick={() => setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
-                        className="text-xs font-bold text-[#14428B] hover:underline flex items-center gap-0.5"
-                      >
-                        <ZoomIn className="w-3.5 h-3.5" /> 확대 보기
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
-              <div className="pb-4 border-b border-slate-100 space-y-2">
-                <h3 className="text-base font-bold text-slate-900">심사 이력 및 공식 인증 보안키</h3>
-                <p className="text-xs text-slate-500">협회 사무국 심사 결과 및 위·변조 방지 식별 코드입니다.</p>
-                {renderSubmissionDate(member.submissionDate)}
-              </div>
-
-              <div className="divide-y divide-slate-100 text-sm">
-                <div className="py-4 flex flex-col gap-1">
-                  <span className="text-xs font-semibold text-slate-500">심사의견 및 검토자 메모</span>
-                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed font-medium">
-                    {member.reviewerNote || '기록된 심사 메모가 없습니다.'}
-                  </p>
-                </div>
-
-                <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900 text-white p-5 rounded-2xl shadow-sm">
-                  <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-white/10 flex items-center justify-center font-bold text-amber-300 shrink-0">
-                      <Key className="w-4.5 h-4.5" />
-                    </div>
-                    <div>
-                      <span className="text-[11px] text-slate-400 block font-medium">회원 고유 식별 코드</span>
-                      <span className="text-lg sm:text-xl font-black font-mono tracking-widest text-emerald-400">
-                        {member.code}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    onClick={copyMemberCode}
-                    className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-white text-slate-900 hover:bg-slate-100 text-xs font-bold transition active:scale-95 shadow-sm shrink-0"
-                  >
-                    {codeCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-700" />}
-                    <span>{codeCopied ? '복사 완료' : '식별코드 복사'}</span>
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="pt-6 pb-4 flex flex-col items-center justify-center text-center space-y-3">
-              <a
-                href="https://cafe.naver.com/khia230712"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-3 px-9 py-4.5 rounded-3xl bg-sky-50/90 hover:bg-sky-100 border-2 border-sky-200/90 text-[#0284C7] hover:text-[#0369A1] text-lg sm:text-xl font-black tracking-tight shadow-sm transition active:scale-95"
-              >
-                <span>협회 카페 바로가기</span>
-              </a>
-              <p className="font-handwriting text-2xl sm:text-3xl text-[#0369A1]/85 tracking-wide select-none">
-                "가치 있는 의식, 같이 찾는 공존"
-              </p>
-            </div>
-
-          </main>
-
-          {previewDoc && (
-            <div 
-              onClick={() => setPreviewDoc(null)}
-              className="fixed inset-0 z-50 bg-black/85 backdrop-blur-md flex flex-col items-center justify-center p-4 cursor-zoom-out"
-            >
-              <div 
-                onClick={(e) => e.stopPropagation()} 
-                className="relative max-w-4xl max-h-[90vh] w-full flex flex-col items-center bg-white rounded-3xl overflow-hidden shadow-2xl cursor-default border border-slate-200"
-              >
-                <div className="w-full px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
-                  <span className="text-sm font-bold text-slate-900 flex items-center gap-2">
-                    <ZoomIn className="w-4 h-4 text-[#14428B]" /> {previewDoc.title}
-                  </span>
-                  <button 
-                    onClick={() => setPreviewDoc(null)}
-                    className="p-1.5 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-600 hover:text-slate-900 transition"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <div className="p-4 sm:p-6 w-full flex items-center justify-center overflow-auto max-h-[80vh] bg-slate-100/60">
-                  {previewDoc.isPdf ? (
-                    <iframe src={previewDoc.src} className="w-full h-[75vh] rounded-xl border border-slate-200 bg-white" title={previewDoc.title} />
-                  ) : (
-                    <img 
-                      src={previewDoc.src} 
-                      alt={previewDoc.title} 
-                      className="max-h-[75vh] w-auto max-w-full object-contain rounded-xl shadow-lg border border-slate-200 bg-white"
-                    />
-                  )}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {isAuthModalOpen && (
-            <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-              <div className="max-w-sm w-full p-6 rounded-3xl shadow-2xl bg-white border border-slate-200 text-slate-900">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
-                      <Lock className="w-4 h-4" />
-                    </div>
-                    <h3 className="font-bold text-base text-slate-900">2차 본인/공무 인증</h3>
-                  </div>
-                  <button onClick={() => setIsAuthModalOpen(false)} className="text-slate-400 hover:text-slate-700">
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-                <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  생년월일 및 비상 연락망의 마스킹을 해제하려면 회원의 <b>생년월일 6자리(YYMMDD)</b>를 입력해 주세요.
-                </p>
-                <form onSubmit={handleSecondaryAuthSubmit} className="space-y-3">
-                  <input
-                    type="password"
-                    maxLength="6"
-                    value={birthInput}
-                    onChange={(e) => setBirthInput(e.target.value.replace(/[^0-9]/g, ''))}
-                    placeholder="생년월일 6자리 숫자 입력"
-                    className="w-full text-center tracking-widest text-lg font-bold px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:border-[#14428B] bg-slate-50 text-slate-900"
-                    autoFocus
-                  />
-                  {authError && <p className="text-xs font-semibold text-rose-600">{authError}</p>}
-                  <div className="flex gap-2 pt-2">
-                    <button
-                      type="button"
-                      onClick={() => setIsAuthModalOpen(false)}
-                      className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-xs font-bold rounded-xl text-slate-700 transition"
-                    >
-                      취소
-                    </button>
-                    <button
-                      type="submit"
-                      className="flex-1 py-3 bg-[#14428B] hover:bg-[#0D2E63] text-white text-xs font-bold rounded-xl shadow-md transition"
-                    >
-                      마스킹 해제
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          )}
-
-          <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-4 shadow-2xs">
-            <p className="font-semibold text-slate-700">사단법인 한국비어업인수산자원보호협회 (KHIA) eKYC 통합 관리 체계</p>
-            <p className="mt-1 text-[11px] font-mono text-slate-400">본 인증서는 공무 확인 용도로 실시간 검증됩니다.</p>
-          </footer>
-        </div>
-      );
-    }
-
-    const root = ReactDOM.createRoot(document.getElementById('root'));
-    root.render(<App />);
-  </script>
-</body>
-</html>
+            <button

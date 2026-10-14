@@ -17,53 +17,48 @@
 <body class="bg-[#F8FAFC] text-slate-900 antialiased selection:bg-[#14428B] selection:text-white min-h-screen flex flex-col justify-between">
 
   <!-- ========================================================
-       [공식 상단 헤더: 협회 공식 로고 및 브랜딩 영역]
+       [공식 상단 헤더: 협회 로고 및 인증 브랜딩]
        ======================================================== -->
   <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
       
-      <!-- 협회 로고 + 명칭 -->
-      <div className="flex items-center gap-3.5">
-        <div class="flex items-center gap-3">
-          <!-- 1. 이미지 로고 (logo.png 가 저장소에 있을 경우 출력, 없을 경우 내장 SVG 출력) -->
-          <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 overflow-hidden border border-blue-200 shrink-0">
-            <img 
-              src="logo.png" 
-              alt="KHIA 공식 로고" 
-              class="w-full h-full object-cover"
-              onerror="this.style.display='none'; document.getElementById('svg-fallback-logo').style.display='flex';"
-            />
-            <!-- SVG 백업 로고 (이미지 파일이 없을 때 품격 있는 월계수 앵커 표시) -->
-            <div id="svg-fallback-logo" class="hidden w-full h-full items-center justify-center">
-              <svg viewBox="0 0 48 48" fill="none" class="w-7 h-7 text-amber-300">
-                <circle cx="24" cy="12" r="5" stroke="currentColor" stroke-width="2.5"/>
-                <line x1="24" y1="17" x2="24" y2="40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                <path d="M12 28h-3a15 15 0 0 0 30 0h-3" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
-                <path d="M10 20c-2 4-2 10 2 15M38 20c2 4 2 10-2 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
-              </svg>
-            </div>
+      <div class="flex items-center gap-3.5">
+        <!-- 협회 로고 (logo.png 우선 로드 / 없을 시 내장 SVG 엠블럼 출력) -->
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#14428B] to-[#0A2A5E] flex items-center justify-center text-white shadow-md shadow-blue-900/20 overflow-hidden border border-blue-200 shrink-0">
+          <img 
+            src="logo.png" 
+            alt="KHIA 로고" 
+            class="w-full h-full object-cover"
+            onerror="this.style.display='none'; document.getElementById('svg-fallback-logo').style.display='flex';"
+          />
+          <div id="svg-fallback-logo" class="hidden w-full h-full items-center justify-center">
+            <svg viewBox="0 0 48 48" fill="none" class="w-7 h-7 text-amber-300">
+              <circle cx="24" cy="12" r="5" stroke="currentColor" stroke-width="2.5"/>
+              <line x1="24" y1="17" x2="24" y2="40" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <path d="M12 28h-3a15 15 0 0 0 30 0h-3" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
+              <path d="M10 20c-2 4-2 10 2 15M38 20c2 4 2 10-2 15" stroke="white" stroke-width="2" stroke-linecap="round"/>
+            </svg>
           </div>
+        </div>
 
-          <div class="flex flex-col">
-            <span class="text-[11px] font-bold text-slate-500 tracking-wider">
-              사단법인 한국비어업인수산자원보호협회
+        <div class="flex flex-col">
+          <span class="text-[11px] font-bold text-slate-500 tracking-wider">
+            사단법인 한국비어업인수산자원보호협회
+          </span>
+          <div class="flex items-center gap-2">
+            <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-900">
+              공식 회원 자격 인증 신청서
+            </h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 rounded-md border border-blue-200">
+              eKYC
             </span>
-            <div class="flex items-center gap-2">
-              <h1 class="text-base sm:text-lg font-black tracking-tight text-slate-900">
-                공식 회원 자격 인증 신청서
-              </h1>
-              <span class="px-2 py-0.5 text-[10px] font-bold bg-blue-50 text-blue-700 rounded-md border border-blue-200">
-                eKYC
-              </span>
-            </div>
           </div>
         </div>
       </div>
 
-      <!-- 우측 상단 고객 안내 -->
       <div class="hidden sm:flex flex-col items-end text-right">
-        <span class="text-xs font-bold text-slate-700">사무국 검증 시스템</span>
-        <span class="text-[10px] text-slate-400 font-mono">암호화 보안 접수</span>
+        <span class="text-xs font-bold text-slate-700">공식 접수 센터</span>
+        <span class="text-[10px] text-slate-400 font-mono">실시간 암호화 전송</span>
       </div>
     </div>
   </header>
@@ -73,183 +68,264 @@
        ======================================================== -->
   <main class="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-6 py-8 space-y-6">
 
-    <!-- 신청 안내 카드 -->
+    <!-- 신청 공식 안내문 -->
     <div class="bg-gradient-to-br from-[#14428B] to-[#0D2E63] text-white p-6 sm:p-7 rounded-3xl shadow-lg shadow-blue-900/15 relative overflow-hidden">
       <div class="relative z-10 space-y-2">
         <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/20 text-xs font-bold text-amber-300">
-          <span>공식 발급 안내</span>
+          <span>발급 목적 및 법적 고지</span>
         </div>
         <h2 class="text-xl sm:text-2xl font-black tracking-tight">비어업인 수산자원보호 협회원 자격 등록</h2>
         <p class="text-xs sm:text-sm text-slate-200 leading-relaxed max-w-2xl">
-          본 양식은 연안 체험 활동 및 해양 레저 활동자의 안전과 정당한 비어업인 권익 보호를 위한 회원 자격 증명서 발급 서식입니다. 제출하신 서류는 사무국 심사 후 모바일 인증 카드로 즉시 발급됩니다.
+          본 양식은 「수산자원관리법」 및 「연안사고 예방에 관한 법률」을 준수하며 바다를 사랑하는 순수 비어업인 레저 활동자의 안전을 도모하고, 해양경찰 및 관계 기관의 현장 검문 시 정당한 비어업인 레저 활동자임을 증명할 수 있는 <b>공식 모바일 자격 인증 카드(eKYC Suite)</b>를 발급받기 위한 신청서입니다.
         </p>
       </div>
     </div>
 
-    <!-- 폼 입력 영역 -->
     <form id="ekycForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
 
-      <!-- 1. 기본 인적사항 섹션 -->
+      <!-- ========================================================
+           [그룹 1] 회원 기본 인적사항
+           ======================================================== -->
       <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-4">
         <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
-          <h3 class="text-base font-bold text-slate-900">1. 회원 기본 인적사항</h3>
-          <span class="text-xs text-rose-500 font-semibold">* 필수 입력</span>
+          <div>
+            <h3 class="text-base font-bold text-slate-900">1. 회원 기본 인적사항</h3>
+            <p class="text-xs text-slate-500 mt-0.5">신분증 및 자격증에 기재된 정보와 정확히 일치하도록 작성해 주세요.</p>
+          </div>
+          <span class="text-xs text-rose-500 font-semibold shrink-0">* 필수 항목</span>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- 성명 -->
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">성명 <span class="text-rose-500">*</span></label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              성명 (실명) <span class="text-rose-500">*</span>
+            </label>
             <input type="text" id="name" required placeholder="예: 홍길동" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">공무 확인 시 신분증 대조를 위해 반드시 실명을 입력해야 합니다.</p>
           </div>
 
+          <!-- 생년월일 -->
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">생년월일 (6자리) <span class="text-rose-500">*</span></label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              생년월일 (앞 6자리) <span class="text-rose-500">*</span>
+            </label>
             <input type="text" id="birth" required maxlength="6" placeholder="예: 790318" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">주민등록번호 앞 6자리 (카드 발급 시 기본적으로 79****로 마스킹 보호됩니다).</p>
           </div>
 
+          <!-- 휴대전화 -->
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">본인 휴대전화번호 <span class="text-rose-500">*</span></label>
-            <input type="tel" id="phone" required placeholder="01012345678 (하이픈 제외)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              본인 휴대전화번호 <span class="text-rose-500">*</span>
+            </label>
+            <input type="tel" id="phone" required placeholder="01012345678 (하이픈 제외 숫자만)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">맨 앞 0이 누락되지 않도록 11자리 전체를 입력해 주세요 (기본 마스킹 처리됨).</p>
           </div>
 
+          <!-- 비상연락처 -->
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">가족 비상 연락처 (사고 대비) <span class="text-rose-500">*</span></label>
-            <input type="tel" id="emergencyPhone" required placeholder="01098765432 (하이픈 제외)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">
+              가족 비상 연락처 (응급 구호용) <span class="text-rose-500">*</span>
+            </label>
+            <input type="tel" id="emergencyPhone" required placeholder="01098765432 (보호자/가족 번호)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">해상 조류 휩쓸림 등 고립·조난 사고 발생 시 해경 및 구조대가 가장 먼저 연락할 직계가족 번호입니다.</p>
           </div>
         </div>
       </div>
 
-      <!-- 2. 소속 단체 및 커뮤니티 정보 -->
+      <!-- ========================================================
+           [그룹 2] 소속 단체 및 커뮤니티 신원
+           ======================================================== -->
       <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-4">
         <div class="pb-3 border-b border-slate-100">
-          <h3 class="text-base font-bold text-slate-900">2. 소속 단체 및 커뮤니티 정보</h3>
-          <p class="text-xs text-slate-500 mt-0.5">해당하는 단체를 모두 체크해 주세요.</p>
+          <h3 class="text-base font-bold text-slate-900">2. 협회 소속 단체 및 커뮤니티 신원</h3>
+          <p class="text-xs text-slate-500 mt-0.5">현재 활동 중이거나 가입되어 있는 단체를 모두 선택해 주세요 (복수 선택 가능).</p>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-2">소속 단체 선택</label>
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
-              <input type="checkbox" name="org" value="사단법인 한국비어업인수산자원보호협회" checked class="w-4 h-4 text-[#14428B] rounded" />
-              <span class="font-bold text-slate-800">사단법인 한국비어업인수산자원보호협회</span>
+          <label class="block text-xs font-bold text-slate-700 mb-2">소속 단체 선택</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm">
+            <label class="flex items-start gap-3 p-3.5 rounded-2xl border border-sky-200 bg-sky-50/50 hover:bg-sky-50 cursor-pointer transition">
+              <input type="checkbox" name="org" value="사단법인 한국비어업인수산자원보호협회" checked class="mt-0.5 w-4 h-4 text-[#14428B] rounded" />
+              <div>
+                <span class="font-bold text-sky-900 block text-xs">사단법인 한국비어업인수산자원보호협회</span>
+                <span class="text-[11px] text-sky-700">해양수산부 인가 비영리 사단법인 공식 회원</span>
+              </div>
             </label>
-            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
-              <input type="checkbox" name="org" value="대한수중환경보호협회" class="w-4 h-4 text-[#14428B] rounded" />
-              <span class="font-medium text-slate-700">대한수중환경보호협회</span>
+            <label class="flex items-start gap-3 p-3.5 rounded-2xl border border-teal-200 bg-teal-50/50 hover:bg-teal-50 cursor-pointer transition">
+              <input type="checkbox" name="org" value="대한수중환경보호협회" class="mt-0.5 w-4 h-4 text-teal-600 rounded" />
+              <div>
+                <span class="font-bold text-teal-900 block text-xs">대한수중환경보호협회</span>
+                <span class="text-[11px] text-teal-700">해양 쓰레기 정화 및 수중 생태계 보호 활동 회원</span>
+              </div>
             </label>
-            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
-              <input type="checkbox" name="org" value="한국스피어피싱협회" class="w-4 h-4 text-[#14428B] rounded" />
-              <span class="font-medium text-slate-700">한국스피어피싱협회</span>
+            <label class="flex items-start gap-3 p-3.5 rounded-2xl border border-rose-200 bg-rose-50/50 hover:bg-rose-50 cursor-pointer transition">
+              <input type="checkbox" name="org" value="한국스피어피싱협회" class="mt-0.5 w-4 h-4 text-rose-600 rounded" />
+              <div>
+                <span class="font-bold text-rose-900 block text-xs">한국스피어피싱협회</span>
+                <span class="text-[11px] text-rose-700">스피어피싱 안전 수칙 준수 및 자율 정화 활동 회원</span>
+              </div>
             </label>
-            <label class="flex items-center gap-2.5 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
-              <input type="checkbox" name="org" value="엘프다이브" class="w-4 h-4 text-[#14428B] rounded" />
-              <span class="font-medium text-slate-700">엘프다이브</span>
+            <label class="flex items-start gap-3 p-3.5 rounded-2xl border border-purple-200 bg-purple-50/50 hover:bg-purple-50 cursor-pointer transition">
+              <input type="checkbox" name="org" value="엘프다이브" class="mt-0.5 w-4 h-4 text-purple-600 rounded" />
+              <div>
+                <span class="font-bold text-purple-900 block text-xs">엘프다이브</span>
+                <span class="text-[11px] text-purple-700">해양 안전 장비 연구 및 다이빙 커뮤니티 파트너</span>
+              </div>
             </label>
           </div>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">네이버 공식 카페 가입 ID</label>
-            <input type="text" id="cafeId" placeholder="예: user@naver.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">네이버 공식 카페 가입 ID</label>
+            <input type="text" id="cafeId" placeholder="예: user1234@naver.com" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">협회 공식 네이버 카페 정회원 등급 확인에 사용됩니다.</p>
           </div>
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">공식 카페 활동 닉네임</label>
-            <input type="text" id="cafeNickname" placeholder="예: 바다사랑" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <label class="block text-xs font-bold text-slate-700 mb-1">협회 공식 카페 활동 닉네임</label>
+            <input type="text" id="cafeNickname" placeholder="예: 바다지킴이" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">커뮤니티 회원 간 상호 인증 및 활동 이력 대조용입니다.</p>
           </div>
         </div>
       </div>
 
-      <!-- 3. 안전교육 및 자격 내역 -->
+      <!-- ========================================================
+           [그룹 3] 안전관리요원 자격 및 교육 이수
+           ======================================================== -->
       <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-4">
         <div class="pb-3 border-b border-slate-100">
           <h3 class="text-base font-bold text-slate-900">3. 안전관리요원 자격 및 교육 이수</h3>
+          <p class="text-xs text-slate-500 mt-0.5">「연안사고 예방에 관한 법률」에 따른 이수 과정 및 보유 자격증 내역입니다.</p>
         </div>
 
         <div>
-          <label class="block text-xs font-bold text-slate-600 mb-2">연안체험활동안전교육 이수 내역</label>
-          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs font-medium">
-            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
-              <input type="checkbox" name="safetyEdu" value="수중형_연안체험활동안전교육" class="w-4 h-4 text-[#14428B]" />
+          <label class="block text-xs font-bold text-slate-700 mb-2">연안체험활동안전교육 법정 이수 내역</label>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs font-medium">
+            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
+              <input type="checkbox" name="safetyEdu" value="수중형_연안체험활동안전교육" class="w-4 h-4 text-[#14428B] rounded" />
               <span>수중형 안전교육</span>
             </label>
-            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
               <input type="checkbox" name="safetyEdu" value="수상형_연안체험활동안전교육" class="w-4 h-4 text-[#14428B]" />
               <span>수상형 안전교육</span>
             </label>
-            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 cursor-pointer">
+            <label class="flex items-center gap-2 p-3 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 cursor-pointer">
               <input type="checkbox" name="safetyEdu" value="통합형_연안체험활동안전교육" class="w-4 h-4 text-[#14428B]" />
               <span>통합형 안전교육</span>
             </label>
           </div>
+          <p class="text-[11px] text-slate-400 mt-1.5">해양경찰청 지정 안전교육 위탁기관에서 발급받은 이수증 기준입니다.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">보유 해양 자격명</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">보유 해양 자격명</label>
             <input type="text" id="qualifications" placeholder="예: 수중레저교육자_프리다이빙, 인명구조요원" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+            <p class="text-[11px] text-slate-400 mt-1">스킨스쿠버, 프리다이빙, 인명구조요원, 동력수상레저기구 조종면허 등</p>
           </div>
 
           <div>
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">어업신고 유무</label>
+            <label class="block text-xs font-bold text-slate-700 mb-1">어업신고 유무 선택</label>
             <select id="fisheryReport" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-[#14428B] focus:bg-white transition">
               <option value="어업 신고 없음 (순수 비어업인)">어업 신고 없음 (순수 비어업인)</option>
               <option value="맨손어업신고완료">맨손어업신고완료</option>
               <option value="나잠어업신고완료">나잠어업신고완료</option>
             </select>
+            <p class="text-[11px] text-slate-400 mt-1">관할 지자체(시·군·구청)에 정식 수산업법상 신고를 필한 경우에만 선택하세요.</p>
           </div>
         </div>
       </div>
 
-      <!-- 4. 활동 위치 (GPS 자동 측정) -->
+      <!-- ========================================================
+           [그룹 4] 활동 등록 위치 (GPS 좌표)
+           ======================================================== -->
       <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-4">
         <div class="pb-3 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h3 class="text-base font-bold text-slate-900">4. 주요 활동 등록 위치 (GPS)</h3>
-            <p class="text-xs text-slate-500 mt-0.5">현 위치 버튼을 누르면 위경도 좌표가 자동 입력됩니다.</p>
+            <p class="text-xs text-slate-500 mt-0.5">주로 입수하거나 해루질·다이빙을 진행하는 연안 해역의 위치 정보입니다.</p>
           </div>
-          <button type="button" onclick="getCurrentGpsLocation()" class="px-3 py-1.5 rounded-xl bg-blue-50 text-[#14428B] border border-blue-200 text-xs font-bold hover:bg-blue-100 transition flex items-center gap-1 shadow-2xs">
-            📍 현재 GPS 좌표 가져오기
+          <button type="button" onclick="getCurrentGpsLocation()" class="px-3.5 py-2 rounded-xl bg-blue-50 text-[#14428B] border border-blue-200 text-xs font-bold hover:bg-blue-100 transition flex items-center gap-1.5 shadow-2xs shrink-0">
+            📍 현재 위치 좌표 측정
           </button>
         </div>
 
         <div>
-          <input type="text" id="activeLocation" placeholder="위도: 37.XXXXX, 경도: 126.XXXXX" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+          <input type="text" id="activeLocation" placeholder="버튼을 누르거나 직접 좌표 입력 (예: 위도: 37.62270, 경도: 126.86244)" class="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-mono focus:outline-none focus:border-[#14428B] focus:bg-white transition" />
+          <p class="text-[11px] text-slate-400 mt-1.5">
+            등록된 GPS 좌표는 협회 서버에서 자동으로 도로명/지번 주소로 역지오코딩 변환되어 자격 인증 카드에 공무 확인용으로 표기됩니다.
+          </p>
         </div>
       </div>
 
-      <!-- 5. 증빙 서류 및 사진 첨부 -->
+      <!-- ========================================================
+           [그룹 5] 공무 증빙 사진 및 서류 사본 첨부
+           ======================================================== -->
       <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-4">
         <div class="pb-3 border-b border-slate-100">
           <h3 class="text-base font-bold text-slate-900">5. 공무 증빙 사진 및 서류 사본 첨부</h3>
-          <p class="text-xs text-slate-500 mt-0.5">휴대폰 카메라로 촬영한 사진을 바로 업로드하실 수 있습니다.</p>
+          <p class="text-xs text-slate-500 mt-0.5">외부 유출을 원천 방지하기 위해 구글 드라이브 비공개 암호화 스트림으로 안전하게 저장됩니다.</p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- 프로필 사진 -->
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span class="text-xs font-bold text-slate-700 block">① 본인 프로필 사진 <span class="text-rose-500">*</span></span>
+            <div>
+              <span class="text-xs font-bold text-slate-800 block">① 본인 프로필 사진 <span class="text-rose-500">*</span></span>
+              <p class="text-[11px] text-slate-500">회원 카드 상단에 노출될 단정한 인물 사진</p>
+            </div>
             <input type="file" id="fileProfile" accept="image/*" required class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
           </div>
 
           <!-- 공무용 정면 실물 사진 -->
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span class="text-xs font-bold text-slate-700 block">② 공무 조회용 실물 정면 사진 <span class="text-rose-500">*</span></span>
+            <div>
+              <span class="text-xs font-bold text-slate-800 block">② 공무 조회용 실물 정면 사진 <span class="text-rose-500">*</span></span>
+              <p class="text-[11px] text-slate-500">모자/선글라스 미착용, 얼굴 식별이 명확한 신분증 대조용 사진</p>
+            </div>
             <input type="file" id="fileMemberPhoto" accept="image/*" required class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
           </div>
 
           <!-- 자격증빙 서류 사본 -->
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span class="text-xs font-bold text-slate-700 block">③ 자격증빙 서류 사본 (선택)</span>
+            <div>
+              <span class="text-xs font-bold text-slate-800 block">③ 자격증빙 서류 사본 (선택)</span>
+              <p class="text-[11px] text-slate-500">자격증 사본, 교육 이수증, 강사증 등 증빙 사진</p>
+            </div>
             <input type="file" id="fileCertDoc" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
           </div>
 
           <!-- 어업신고증 사본 -->
           <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
-            <span class="text-xs font-bold text-slate-700 block">④ 어업신고증 사본 (해당자만)</span>
+            <div>
+              <span class="text-xs font-bold text-slate-800 block">④ 어업신고증 사본 (해당자만)</span>
+              <p class="text-[11px] text-slate-500">맨손어업/나잠어업 신고필증 스캔 또는 촬영본</p>
+            </div>
             <input type="file" id="fileFisheryDoc" accept="image/*" class="w-full text-xs text-slate-500 file:mr-3 file:py-2 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-900 file:text-white hover:file:bg-slate-800" />
           </div>
         </div>
+      </div>
+
+      <!-- ========================================================
+           [그룹 6] 개인정보 수집 및 이용 동의
+           ======================================================== -->
+      <div class="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)] space-y-3">
+        <div class="pb-2 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="text-sm font-bold text-slate-900">개인정보 수집·이용 및 제3자(해경) 제공 동의</h3>
+          <span class="text-xs text-rose-500 font-semibold">* 필수 확인</span>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 leading-relaxed max-h-28 overflow-y-auto">
+          1. 수집 목적: 사단법인 한국비어업인수산자원보호협회 회원 신원 검증 및 모바일 자격 인증 카드 발급, 해양 조난 시 긴급 구호 연락망 구축.<br/>
+          2. 수집 항목: 성명, 생년월일, 휴대전화번호, 가족 비상연락처, 사진, 자격 내역, 어업신고 정보, GPS 위치 정보.<br/>
+          3. 보유 기간: 회원 자격 유지 기간 동안 보관하며 탈퇴 또는 파기 요청 시 지체 없이 파기합니다.<br/>
+          4. 동의 거부 권리: 귀하는 동의를 거부할 권리가 있으나, 거부 시 모바일 자격 인증서 발급이 제한됩니다.
+        </div>
+        <label class="flex items-center gap-2 pt-1 cursor-pointer">
+          <input type="checkbox" required class="w-4 h-4 text-[#14428B] rounded" />
+          <span class="text-xs font-bold text-slate-800">개인정보 수집 및 이용 방침에 동의합니다.</span>
+        </label>
       </div>
 
       <!-- 제출 버튼 -->
@@ -261,7 +337,7 @@
 
     </form>
 
-    <!-- 접수 완료 모달 안내창 -->
+    <!-- 접수 완료 결과 모달창 -->
     <div id="resultModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
       <div class="bg-white rounded-3xl max-w-md w-full p-7 border border-slate-200 shadow-2xl text-center space-y-4">
         <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto border border-emerald-200 shadow-sm text-2xl font-black">
@@ -270,7 +346,7 @@
         <h3 class="text-xl font-black text-slate-900">신청서 접수 완료!</h3>
         <p class="text-xs text-slate-600 leading-relaxed">
           회원 자격 심사 요청이 성공적으로 접수되었습니다.<br/>
-          아래 발급된 회원 인증 코드로 자격 인증 카드를 바로 조회하실 수 있습니다.
+          아래 발급된 회원 식별 코드로 내 자격 인증 카드를 바로 확인하실 수 있습니다.
         </p>
 
         <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-1">
@@ -291,20 +367,20 @@
   <!-- 하단 공식 푸터 -->
   <footer class="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-12 shadow-2xs">
     <p class="font-semibold text-slate-700">사단법인 한국비어업인수산자원보호협회 (KHIA)</p>
-    <p class="mt-1 text-[11px] font-mono text-slate-400">Copyright © KHIA. All rights reserved.</p>
+    <p class="mt-1 text-[11px] font-mono text-slate-400">본 시스템은 공무 확인 및 회원 권익 보호 용도로 운영됩니다.</p>
   </footer>
 
   <!-- ========================================================
-       [자바스크립트 로직]
+       [자바스크립트 비동기 전송 로직]
        ======================================================== -->
   <script>
     // ⚠️ 배포된 본인의 Google Apps Script Web App URL(exec)을 대입하세요.
     const GAS_API_URL = "https://script.google.com/macros/s/AKfycbxNnbrREJ0ZS61h2EabukqkjqUYwaPuBinLaZEtSLFbUVdo_SzaOHxlOQ8DygtV5QEG/exec";
 
-    // 1. GPS 위치 수집 헬퍼
+    // GPS 좌표 자동 수집
     function getCurrentGpsLocation() {
       if (!navigator.geolocation) {
-        alert("현재 브라우저에서 GPS 위치 정보를 지원하지 않습니다.");
+        alert("현재 사용 중인 브라우저에서 GPS 위치 측정을 지원하지 않습니다.");
         return;
       }
       navigator.geolocation.getCurrentPosition(
@@ -314,12 +390,12 @@
           document.getElementById('activeLocation').value = `위도: ${lat}, 경도: ${lng}`;
         },
         (err) => {
-          alert("GPS 좌표를 가져오지 못했습니다. 위치 권한을 확인해 주세요.");
+          alert("GPS 좌표를 측정하지 못했습니다. 스마트폰 또는 브라우저의 위치 권한을 확인해 주세요.");
         }
       );
     }
 
-    // 2. 파일 ➔ Base64 비동기 변환기
+    // 파일 ➔ Base64 스트림 인라인 변환
     function readFileAsBase64(fileInput) {
       return new Promise((resolve) => {
         if (!fileInput.files || fileInput.files.length === 0) {
@@ -340,7 +416,7 @@
       });
     }
 
-    // 3. 폼 제출 핸들러
+    // 신청서 제출 처리
     async function handleFormSubmit(e) {
       e.preventDefault();
       const submitBtn = document.getElementById('submitBtn');
@@ -348,17 +424,14 @@
       submitBtn.innerHTML = `<span>서류 암호화 및 서버 전송 중...</span>`;
 
       try {
-        // 체크박스 수집
         const orgs = Array.from(document.querySelectorAll('input[name="org"]:checked')).map(el => el.value).join(', ');
         const safetyEdus = Array.from(document.querySelectorAll('input[name="safetyEdu"]:checked')).map(el => el.value).join(', ');
 
-        // 파일 4종 Base64 변환
         const profileImg = await readFileAsBase64(document.getElementById('fileProfile'));
         const memberPhoto = await readFileAsBase64(document.getElementById('fileMemberPhoto'));
         const certDoc = await readFileAsBase64(document.getElementById('fileCertDoc'));
         const fisheryDoc = await readFileAsBase64(document.getElementById('fileFisheryDoc'));
 
-        // 백엔드로 전송할 페이로드 구성
         const payload = {
           name: document.getElementById('name').value.trim(),
           birth: document.getElementById('birth').value.trim(),
@@ -379,7 +452,6 @@
           fisheryDoc: fisheryDoc
         };
 
-        // Google Apps Script Headless 백엔드로 POST
         const res = await fetch(GAS_API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },

@@ -76,7 +76,7 @@
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 회원 인증서 로드 중...</p>
+      <p style="font-size: 15px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">KHIA 등록 회원 인증서 로드 중...</p>
       <p style="font-size: 12px; color: #64748B; margin-top: 6px;">잠시만 기다려 주세요.</p>
     </div>
     <style>
@@ -288,7 +288,7 @@
         return (
           <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
             <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-sm font-bold text-[#14428B] tracking-tight">등록 회원 인증서 로드 중...</p>
+            <p className="text-sm font-bold text-[#14428B] tracking-tight">KHIA 등록 회원 인증서 로드 중...</p>
             <p className="text-xs text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
@@ -400,10 +400,10 @@
                 <div className="pt-1">
                   <div className="inline-flex flex-col items-stretch">
                     <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white drop-shadow-md whitespace-nowrap">
-                      등록 회원 인증서
+                      KHIA 등록 회원 인증서
                     </h1>
 
-                    {/* 회원사진: 타이틀 '등록 회원 인증서' 폭과 100% 동일한 가로폭 + 1:1 정사각 비율 + 모서리 라운딩 */}
+                    {/* 회원사진: 타이틀 'KHIA 등록 회원 인증서' 폭과 100% 동일한 가로폭 + 1:1 정사각 비율 + 모서리 라운딩 */}
                     <div 
                       onClick={() => member.profileImg && setPreviewDoc({ title: '프로필 패치 이미지', src: member.profileImg, isPdf: false })}
                       className="mt-4 relative w-full aspect-square rounded-2xl overflow-hidden border-2 border-white/40 shadow-2xl bg-zinc-900 cursor-pointer group"

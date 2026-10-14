@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KHIA 등록 회원 인증서</title>
   
-  <!-- 안정적인 글로벌 CDN 및 손글씨 폰트(Nanum Pen Script) 로드 -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
@@ -18,7 +17,6 @@
       font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
     }
 
-    /* 필기체 손글씨 전용 클래스 */
     .font-handwriting {
       font-family: 'Nanum Pen Script', cursive;
     }
@@ -88,11 +86,47 @@
     const { useState, useEffect } = React;
 
     // 배포된 Google Apps Script Web App URL(exec)
-    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbzRkIthGSou9CzIqOa9OdcurIwkS-qoN641PBo48Eb37fV2OzqS9cR69ieLiECg3bGR/exec";
+    const GAS_API_URL = "https://script.google.com/macros/s/AKfycbyvLtxJ97qQm6BY6-Nx0bzJKBt-IfIq3M4JkBFhbW2GZTzhOhaC2gF6JLuXvm00PVhR/exec";
 
     const IconWrapper = ({ children, className = "w-4 h-4", ...props }) => (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
         {children}
+      </svg>
+    );
+
+    // 🕸️ 1. 어업신고 유무 상단 헤더용 "그물(Fishing Net)" 아이콘
+    const NetIcon = ({ className = "w-4 h-4", ...props }) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+        <path d="M3 5c6 2 12 2 18 0" />
+        <path d="M4 5v12c0 2 3.5 3 8 3s8-1 8-3V5" />
+        <path d="M4 10l16 6" />
+        <path d="M20 10L4 16" />
+        <path d="M8 6l12 6" />
+        <path d="M16 6L4 12" />
+        <circle cx="5" cy="4" r="1" fill="currentColor" />
+        <circle cx="12" cy="5.5" r="1" fill="currentColor" />
+        <circle cx="19" cy="4" r="1" fill="currentColor" />
+      </svg>
+    );
+
+    // ⛏️ 2. 맨손어업신고완료 전용 "호미(Hand Hoe)" 아이콘
+    const HoeIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+        {/* 호미 날 (삼각 곡선형 쟁기 날) */}
+        <path d="M14 3c-4.5 0-8.5 3-9.5 7.5 3.5 1 7.5-.5 9.5-3.5 1-1.5 1-3 0-4Z" fill="currentColor" fillOpacity="0.18" />
+        {/* 호미 슴베(목) 및 자루(손잡이) */}
+        <path d="M14 7l3 3" />
+        <path d="M17 10l-7 10" strokeWidth="2.5" />
+      </svg>
+    );
+
+    // 🤿 3. 나잠어업신고완료 전용 "잠수용 마스크(Diving Mask)" 아이콘
+    const DivingMaskIcon = ({ className = "w-3.5 h-3.5", ...props }) => (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className} {...props}>
+        {/* 잠수 마스크 고글 프레임 및 코 포켓 */}
+        <path d="M3 8a3 3 0 0 1 3-3h10a3 3 0 0 1 3 3v4a3 3 0 0 1-3 3h-2.5l-1.5-2-1.5 2H6a3 3 0 0 1-3-3V8Z" fill="currentColor" fillOpacity="0.15" />
+        {/* 스노클 파이프 */}
+        <path d="M21 4v11a4 4 0 0 1-4 4h-2" />
       </svg>
     );
 
@@ -105,7 +139,6 @@
     const MapPin = (p) => <IconWrapper {...p}><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></IconWrapper>;
     const Phone = (p) => <IconWrapper {...p}><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></IconWrapper>;
     const Award = (p) => <IconWrapper {...p}><circle cx="12" cy="8" r="7"/><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"/></IconWrapper>;
-    const Anchor = (p) => <IconWrapper {...p}><circle cx="12" cy="5" r="3"/><line x1="12" y1="22" x2="12" y2="8"/><path d="M5 12H2a10 10 0 0 0 20 0h-3"/></IconWrapper>;
     const Key = (p) => <IconWrapper {...p}><circle cx="7.5" cy="15.5" r="5.5"/><path d="m21 2-9.6 9.6"/><path d="m15.5 7.5 3 3L22 7l-3-3"/></IconWrapper>;
     const Zap = (p) => <IconWrapper {...p}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></IconWrapper>;
     const Lock = (p) => <IconWrapper {...p}><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></IconWrapper>;
@@ -234,6 +267,7 @@
         }
       };
 
+      // 소속 단체별 파스텔 톤 뱃지 스타일
       const getOrgBadgeStyle = (orgName) => {
         const clean = String(orgName).trim();
         if (clean.includes('한국비어업인수산자원보호협회')) return 'bg-sky-50 text-sky-800 border-sky-200';
@@ -241,6 +275,52 @@
         if (clean.includes('한국스피어피싱협회')) return 'bg-rose-50 text-rose-800 border-rose-200';
         if (clean.includes('엘프다이브')) return 'bg-purple-50 text-purple-800 border-purple-200';
         return 'bg-slate-50 text-slate-800 border-slate-200';
+      };
+
+      /**
+       * [요청 반영] 안전교육 4종별 전용 파스텔 컬러 매핑
+       * - 일반형_연안체험활동안전교육: 파스텔 스카이 블루
+       * - 수상형_연안체험활동안전교육: 파스텔 시안 아쿠아
+       * - 수중형_연안체험활동안전교육: 파스텔 인디고 블루
+       * - 통합형_연안체험활동안전교육: 파스텔 에메랄드 민트
+       */
+      const getSafetyEduBadgeStyle = (eduName) => {
+        const clean = String(eduName).trim();
+        if (clean.includes('일반형')) return 'bg-sky-50 text-sky-800 border-sky-200';
+        if (clean.includes('수상형')) return 'bg-cyan-50 text-cyan-800 border-cyan-200';
+        if (clean.includes('수중형')) return 'bg-indigo-50 text-indigo-800 border-indigo-200';
+        if (clean.includes('통합형')) return 'bg-emerald-50 text-emerald-800 border-emerald-200';
+        return 'bg-blue-50 text-blue-800 border-blue-200';
+      };
+
+      /**
+       * [요청 반영] 보유 자격 최대 5개까지 각각 다른 파스텔 톤 컬러 지정
+       */
+      const getQualificationBadgeStyle = (index) => {
+        const palette = [
+          'bg-purple-50 text-purple-800 border-purple-200',   // 1번 자격: 파스텔 퍼플
+          'bg-rose-50 text-rose-800 border-rose-200',         // 2번 자격: 파스텔 로즈 핑크
+          'bg-amber-50 text-amber-800 border-amber-200',      // 3번 자격: 파스텔 앰버 골드
+          'bg-teal-50 text-teal-800 border-teal-200',         // 4번 자격: 파스텔 틸 그린
+          'bg-fuchsia-50 text-fuchsia-800 border-fuchsia-200' // 5번 자격: 파스텔 푸시아 플럼
+        ];
+        return palette[index % palette.length];
+      };
+
+      /**
+       * [요청 반영] 어업신고 항목별 맞춤형 아이콘 반환
+       * - 맨손어업신고완료: 호미(HoeIcon)
+       * - 나잠어업신고완료: 잠수용 마스크(DivingMaskIcon)
+       */
+      const renderFisheryItemIcon = (labelStr) => {
+        const clean = String(labelStr || '').trim();
+        if (clean.includes('맨손')) {
+          return <HoeIcon className="w-4 h-4 text-amber-700 shrink-0" />;
+        }
+        if (clean.includes('나잠')) {
+          return <DivingMaskIcon className="w-4 h-4 text-cyan-700 shrink-0" />;
+        }
+        return <NetIcon className="w-4 h-4 text-cyan-700 shrink-0" />;
       };
 
       const renderStatusIcon = (status) => {
@@ -253,9 +333,6 @@
         return <Clock className="w-3.5 h-3.5 shrink-0" />;
       };
 
-      /**
-       * [요청 1 반영] 승인된 경우 발급일자를 "NNNN년" 줄바꿈 "NN월 NN일"로 표기
-       */
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
@@ -371,9 +448,7 @@
       return (
         <div className="min-h-screen flex flex-col bg-[#F4F7FB]">
           
-          {/* ========================================================
-              [요청 2 반영] 최상단 글로벌 헤더: 왼쪽 아이콘에 logo.png 적용
-             ======================================================== */}
+          {/* 최상단 글로벌 헤더: 왼쪽 아이콘에 logo.png 적용 */}
           <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs">
             <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
@@ -417,9 +492,7 @@
           {/* 메인 컨테이너 */}
           <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4 space-y-6">
             
-            {/* ========================================================
-                [최상단] 마스터 메탈릭 VIP 자격 플레이트
-               ======================================================== */}
+            {/* [최상단] 마스터 메탈릭 VIP 자격 플레이트 */}
             <div className={`relative rounded-[32px] p-6 sm:p-8 text-white overflow-hidden transition-all ${themeMasterClass}`}>
               <div className="absolute inset-0 metallic-shimmer pointer-events-none"></div>
 
@@ -494,11 +567,7 @@
                 </div>
               </div>
 
-              {/* ========================================================
-                  [요청 1 반영]
-                  - 발급일자 아래: "NNNN년" 줄바꿈 "NN월 NN일"
-                  - 우측: "OFFICIAL VERIFIED" 줄바꿈 "MEMBER" (O와 M 수직 일렬 맞춤)
-                 ======================================================== */}
+              {/* 발급일자 2줄 & OFFICIAL VERIFIED / MEMBER 일렬 정렬 */}
               <div className="relative z-10 mt-5 pt-4 font-mono">
                 <div className="text-[11px] text-slate-400 font-semibold tracking-tight mb-1">발급일자</div>
                 <div className="flex items-start justify-between text-xs">
@@ -513,6 +582,8 @@
 
             {/* ========================================================
                 [1순위] 안전관리요원 자격 증명
+                - 안전교육 4종 각각 다른 파스텔 컬러 적용
+                - 보유 자격 최대 5종 각각 다른 파스텔 컬러 적용
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
@@ -526,11 +597,12 @@
               </div>
 
               <div className="divide-y divide-slate-100 text-sm">
+                {/* 안전교육 이수 내역: 유형별 파스텔 톤 적용 */}
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-500 shrink-0">연안체험활동 법정 안전교육 이수 내역</span>
                   <div className="flex flex-wrap gap-1.5">
                     {splitBadges(member.safetyEdu).map((edu, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-blue-900 text-xs font-semibold">
+                      <span key={i} className={`px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${getSafetyEduBadgeStyle(edu)}`}>
                         🎓 {edu}
                       </span>
                     ))}
@@ -540,11 +612,12 @@
                   </div>
                 </div>
 
+                {/* 보유 자격: 최대 5개까지 각각 다른 파스텔 톤 적용 */}
                 <div className="py-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span className="text-xs font-semibold text-slate-500 shrink-0">보유 자격</span>
                   <div className="flex flex-wrap gap-1.5">
                     {splitBadges(member.qualifications).map((qual, i) => (
-                      <span key={i} className="px-2.5 py-1 rounded-lg bg-purple-50 border border-purple-200 text-purple-900 text-xs font-semibold">
+                      <span key={i} className={`px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${getQualificationBadgeStyle(i)}`}>
                         🎖️ {qual}
                       </span>
                     ))}
@@ -600,11 +673,14 @@
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {certDocItems.map((doc, idx) => {
                         const isPdf = doc.mimeType === 'application/pdf' || (doc.dataUri && doc.dataUri.startsWith('data:application/pdf'));
+                        const badgeStyle = doc.category === '안전교육'
+                          ? getSafetyEduBadgeStyle(doc.label)
+                          : getQualificationBadgeStyle(idx);
                         return (
                           <div key={idx} className="space-y-2.5">
                             <div className="flex items-center justify-between gap-2">
                               <div className="flex items-center gap-1.5 min-w-0">
-                                <span className={`px-2 py-0.5 rounded text-[10px] font-bold shrink-0 ${doc.category === '안전교육' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'}`}>
+                                <span className={`px-2 py-0.5 rounded-md border text-[10px] font-bold shrink-0 ${badgeStyle}`}>
                                   {doc.category || '자격증빙'}
                                 </span>
                                 <span className="text-xs font-bold text-slate-900 truncate">{doc.label}</span>
@@ -642,14 +718,17 @@
             </div>
 
             {/* ========================================================
-                [2순위] 어업 신고 유무
+                [2순위] 이업신고 유무
+                - 상단 헤더 아이콘: 그물(NetIcon)
+                - 맨손어업신고완료: 호미(HoeIcon)
+                - 나잠어업신고완료: 잠수용 마스크(DivingMaskIcon)
                ======================================================== */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
               <div className="pb-4 border-b border-slate-100 flex items-center gap-3">
                 <div className="w-8 h-8 rounded-xl bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-800 shadow-2xs">
-                  <Anchor className="w-4 h-4" />
+                  <NetIcon className="w-4.5 h-4.5" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">어업 신고 유무</h3>
+                <h3 className="text-base font-bold text-slate-900">이업신고 유무</h3>
               </div>
 
               <div className="divide-y divide-slate-100 text-sm">
@@ -657,11 +736,18 @@
                   <span className="text-xs font-semibold text-slate-500">어업 신고 상태</span>
                   <div className="flex flex-wrap gap-1.5">
                     {splitBadges(member.fisheryReport).length > 0 ? (
-                      splitBadges(member.fisheryReport).map((rep, i) => (
-                        <span key={i} className="px-2.5 py-1 rounded-lg bg-cyan-50 border border-cyan-200 text-cyan-900 text-xs font-bold">
-                          ⚓ {rep}
-                        </span>
-                      ))
+                      splitBadges(member.fisheryReport).map((rep, i) => {
+                        const isMaenson = rep.includes('맨손');
+                        const badgeColor = isMaenson
+                          ? 'bg-amber-50 border-amber-200 text-amber-900'
+                          : 'bg-cyan-50 border-cyan-200 text-cyan-900';
+                        return (
+                          <span key={i} className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-bold shadow-2xs ${badgeColor}`}>
+                            {renderFisheryItemIcon(rep)}
+                            <span>{rep}</span>
+                          </span>
+                        );
+                      })
                     ) : (
                       <span className="text-sm font-bold text-slate-900">
                         {member.fisheryReport || '어업 신고 없음 (순수 비어업인)'}
@@ -670,11 +756,11 @@
                   </div>
                 </div>
 
-                {/* 어업 신고증 증빙 서류 */}
+                {/* 어업신고증 증빙 서류 (호미 / 잠수마스크 아이콘 연동) */}
                 <div className="pt-5 space-y-4">
-                  <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업 신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
+                  <span className="text-xs font-bold text-slate-700 block">항목별 매칭 어업신고증 증빙 서류 ({fisheryDocItems.length}건)</span>
                   {fisheryDocItems.length === 0 ? (
-                    <p className="text-xs text-slate-400">등록된 어업 신고증 사본 없음</p>
+                    <p className="text-xs text-slate-400">등록된 어업신고증 사본 없음</p>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {fisheryDocItems.map((doc, idx) => {
@@ -682,22 +768,25 @@
                         return (
                           <div key={idx} className="space-y-2.5">
                             <div className="flex items-center justify-between gap-2">
-                              <span className="text-xs font-bold text-slate-900 truncate">⚓ {doc.label}</span>
+                              <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-900 truncate">
+                                {renderFisheryItemIcon(doc.label)}
+                                <span className="truncate">{doc.label}</span>
+                              </span>
                               <button
-                                onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
+                                onClick={() => setPreviewDoc({ title: `[어업신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
                                 className="text-[11px] font-bold text-[#14428B] hover:underline shrink-0 flex items-center gap-0.5"
                               >
                                 <ZoomIn className="w-3.5 h-3.5" /> {isPdf ? 'PDF 열람' : '확대 보기'}
                               </button>
                             </div>
                             <div 
-                              onClick={() => setPreviewDoc({ title: `[어업 신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
+                              onClick={() => setPreviewDoc({ title: `[어업신고증] ${doc.label}`, src: doc.dataUri, isPdf })}
                               className="relative w-full rounded-2xl overflow-hidden border border-slate-200 cursor-pointer group"
                             >
                               {isPdf ? (
                                 <div className="text-center p-6 bg-slate-50 space-y-1">
                                   <div className="text-2xl">📄</div>
-                                  <div className="text-xs font-bold text-slate-700">PDF 어업 신고증</div>
+                                  <div className="text-xs font-bold text-slate-700">PDF 어업신고증</div>
                                   <div className="text-[11px] text-[#14428B] font-semibold">클릭하여 열람</div>
                                 </div>
                               ) : (
@@ -938,7 +1027,7 @@
             </div>
           )}
 
-          {/* 2차 본인/공무 인증 모달 */}
+          {/* 2차 본인/공무원 인증 모달 */}
           {isAuthModalOpen && (
             <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
               <div className="max-w-sm w-full p-6 rounded-3xl shadow-2xl bg-white border border-slate-200 text-slate-900">
@@ -947,14 +1036,14 @@
                     <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-800">
                       <Lock className="w-4 h-4" />
                     </div>
-                    <h3 className="font-bold text-base text-slate-900">2차 본인/공무 인증</h3>
+                    <h3 className="font-bold text-base text-slate-900">2차 본인/공무원 인증</h3>
                   </div>
                   <button onClick={() => setIsAuthModalOpen(false)} className="text-slate-400 hover:text-slate-700">
                     <X className="w-5 h-5" />
                   </button>
                 </div>
                 <p className="text-xs text-slate-600 mb-4 leading-relaxed">
-                  생년월일 및 비상 연락망의 마스킹을 해제하려면 회원의 <b>생년월일 6자리</b>(예: 850112)를 입력해 주세요.
+                  생년월일 및 비상 연락망의 마스킹을 해제하려면 회원의 <b>생년월일 6자리(YYMMDD)</b>를 입력해 주세요.
                 </p>
                 <form onSubmit={handleSecondaryAuthSubmit} className="space-y-3">
                   <input

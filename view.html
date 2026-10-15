@@ -75,8 +75,8 @@
   <div id="root">
     <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-      <p style="font-size: 20px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 회원 인증서 로드 중...</p>
-      <p style="font-size: 15px; color: #64748B; margin-top: 6px;">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
+      <p style="font-size: 18px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 회원 인증서 로드 중...</p>
+      <p style="font-size: 14px; color: #64748B; margin-top: 6px;">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
     </div>
     <style>
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -378,13 +378,13 @@
         );
       };
 
-      // 리액트 마운트 후 로딩 화면 (복호화 안내 문구 완벽 복원)
+      // 리액트 마운트 후 로딩 화면
       if (isLoading) {
         return (
-          <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#F8FAFC]">
-            <div className="w-12 h-12 border-3 border-[#14428B] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p className="text-lg font-bold text-[#14428B] tracking-tight">등록 회원 인증서 로드 중...</p>
-            <p className="text-sm text-slate-400 mt-1">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '24px', backgroundColor: '#F8FAFC' }}>
+            <div style={{ width: '48px', height: '48px', border: '3px solid #14428B', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite', marginBottom: '16px' }}></div>
+            <p style={{ fontSize: '18px', fontWeight: 800, color: '#14428B', letterSpacing: '-0.025em', margin: 0 }}>등록 회원 인증서 로드 중...</p>
+            <p style={{ fontSize: '14px', color: '#64748B', marginTop: '8px', marginBottom: 0 }}>비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
           </div>
         );
       }

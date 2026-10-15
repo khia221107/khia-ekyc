@@ -9,16 +9,29 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js" crossorigin></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js" crossorigin></script>
+
+  <!-- 💡 [PC/모바일 글꼴 통일] 웹폰트 고속 사전 연결 및 안정적인 CDN 로드 -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
 
   <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-    body { 
-      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif; 
+    /* 💡 PC(Windows/Mac)와 모바일 전 기기 통일 폰트 패밀리 지정 */
+    body, #root { 
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Segoe UI', 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif !important; 
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* 💡 PC에서 영문/숫자 고정폭(font-mono)이 거칠게 출력되는 현상 방지 */
+    .font-mono, [class*="font-mono"] {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
     }
 
     .font-handwriting {
-      font-family: 'Nanum Pen Script', cursive;
+      font-family: 'Nanum Pen Script', cursive !important;
     }
 
     .theme-gold-master {
@@ -71,12 +84,14 @@
 </head>
 <body class="bg-[#F8FAFC] text-slate-900 antialiased selection:bg-[#14428B] selection:text-white min-h-screen flex flex-col justify-between">
 
-  <!-- 초기 브라우저 로딩 화면 (복호화 안내 문구 적용) -->
+  <!-- ========================================================
+       [초기 브라우저 로딩 화면] 정적 HTML 단계에서 깜빡임 없이 고정
+       ======================================================== -->
   <div id="root">
-    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px;">
+    <div style="min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; background-color: #F8FAFC;">
       <div style="width: 48px; height: 48px; border: 3px solid #14428B; border-top-color: transparent; border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;"></div>
-      <p style="font-size: 18px; font-weight: 800; color: #14428B; letter-spacing: -0.025em;">등록 인증서 로드 중...</p>
-      <p style="font-size: 14px; color: #64748B; margin-top: 6px;">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
+      <p style="font-size: 18px; font-weight: 800; color: #14428B; letter-spacing: -0.025em; margin: 0;">등록 인증서 로드 중...</p>
+      <p style="font-size: 14px; color: #64748B; margin-top: 8px; margin-bottom: 0;">비공개 암호화 데이터 스트림을 복호화하고 있습니다.</p>
     </div>
     <style>
       @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -315,27 +330,13 @@
       };
 
       /**
-       * [날짜 및 승인 대기 간격 밀착 조정 함수]
-       * gap-1.5(스페이스바 1칸)로 자연스럽게 붙여줍니다.
-       */
-      const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
-        if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
-          return (
-            <div className="inline-flex items-center gap-1.5 text-amber-300 font-black text-xs tracking-normal leading-tight">
-              <span>승인</span>
-              <span>대기</span>
-            </div>
-          );
-        }
-   
-       /**
        * [날짜 및 승인 대기 간격 밀착 및 폰트 크기 통일 함수]
-       * 모든 텍스트의 크기를 동일한 text-xs(12px)로 고정합니다.
+       * 중복을 제거하고 text-xs(12px) font-bold 및 gap-1로 단정하게 고정합니다.
        */
       const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
         if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
           return (
-            <div className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs leading-tight">
+            <div className="inline-flex items-center gap-1 text-amber-300 font-bold text-xs leading-tight">
               <span>승인</span>
               <span>대기</span>
             </div>
@@ -360,8 +361,8 @@
             {dateStr}
           </span>
         );
-      };      
-      
+      };
+
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -392,7 +393,9 @@
         );
       };
 
-      // 리액트 마운트 후 로딩 화면
+      // ========================================================
+      // [리액트 마운트 후 로딩 화면] 정적 HTML과 일치시켜 깜빡임 차단
+      // ========================================================
       if (isLoading) {
         return (
           <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center', padding: '24px', backgroundColor: '#F8FAFC' }}>
@@ -575,7 +578,7 @@
                 </div>
               </div>
 
-              {/* 발급일자 영역: 라벨과 날짜 모두 text-xs로 통일 */}
+              {/* 발급일자 영역: 라벨과 날짜 모두 text-xs로 통일 및 불필요한 중복 태그 정돈 */}
               <div className="relative z-10 mt-5 pt-4">
                 <div className="flex items-end justify-between text-xs">
                   
@@ -594,9 +597,7 @@
                 </div>
               </div> 
               
-                </div>
-              </div>
-            </div> {/* ◀ 무한 로딩을 유발했던 누락된 메탈 카드 닫는 태그 완벽 복원! */}
+            </div> {/* 메탈 카드 정상 닫힘 */}
 
             {/* [1순위] 안전관리요원 자격 증명 */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-slate-200/90 shadow-[0_8px_25px_-5px_rgba(0,0,0,0.04)]">
@@ -1081,6 +1082,7 @@
             </div>
           )}
 
+          {/* 하단 푸터 */}
           <footer className="border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500 mt-4 shadow-2xs">
             <p className="font-semibold text-slate-700">사단법인 한국비어업인수산자원보호협회 (KHIA) eKYC 통합 관리 체계</p>
             <p className="mt-1 text-[11px] font-mono text-slate-400">본 인증서는 공무 확인 용도로 실시간 검증됩니다.</p>

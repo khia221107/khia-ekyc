@@ -327,13 +327,27 @@
             </div>
           );
         }
+   
+       /**
+       * [날짜 및 승인 대기 간격 밀착 및 폰트 크기 통일 함수]
+       * 모든 텍스트의 크기를 동일한 text-xs(12px)로 고정합니다.
+       */
+      const renderIssueDateFormatted = (dateStr, isApprovedStatus) => {
+        if (!isApprovedStatus || !dateStr || dateStr === '승인 대기') {
+          return (
+            <div className="inline-flex items-center gap-1.5 text-amber-300 font-bold text-xs leading-tight">
+              <span>승인</span>
+              <span>대기</span>
+            </div>
+          );
+        }
 
         const match = String(dateStr).trim().match(/^(\d{4}년)\s*(\d{1,2}월)\s*(\d{1,2}일)$/);
         if (match) {
           return (
-            <div className="flex flex-col items-start text-amber-300 font-black leading-tight space-y-0.5">
-              <span className="text-xs tracking-normal">{match[1]}</span>
-              <div className="inline-flex items-center gap-1.5 text-xs tracking-normal">
+            <div className="flex flex-col items-start text-amber-300 font-bold text-xs leading-tight space-y-0.5">
+              <span>{match[1]}</span>
+              <div className="inline-flex items-center gap-1 text-xs">
                 <span>{match[2]}</span>
                 <span>{match[3]}</span>
               </div>
@@ -342,12 +356,12 @@
         }
 
         return (
-          <span className="text-amber-300 font-black text-xs tracking-normal">
+          <span className="text-amber-300 font-bold text-xs">
             {dateStr}
           </span>
         );
-      };
-
+      };      
+      
       const renderSubmissionDate = (dateStr) => {
         if (!dateStr || dateStr === '-') {
           return (
@@ -561,22 +575,25 @@
                 </div>
               </div>
 
-              {/* 발급일자 영역: 날짜와 승인대기 간격 밀착 적용 */}
+              {/* 발급일자 영역: 라벨과 날짜 모두 text-xs로 통일 */}
               <div className="relative z-10 mt-5 pt-4">
                 <div className="flex items-end justify-between text-xs">
                   
-                  <div className="flex flex-col items-start">
-                    <span className="text-[11px] text-slate-400 font-semibold mb-1 tracking-tight">
+                  <div className="flex flex-col items-start text-xs">
+                    <span className="text-slate-400 font-semibold mb-1 text-xs tracking-tight">
                       발급일자
                     </span>
                     {renderIssueDateFormatted(displayIssueDate, isApproved)}
                   </div>
 
-                  <div className="flex flex-col items-start text-left font-mono font-bold tracking-widest text-amber-300 uppercase leading-tight">
+                  <div className="flex flex-col items-start text-left font-mono font-bold tracking-widest text-amber-300 uppercase leading-tight text-xs">
                     <span>OFFICIAL VERIFIED</span>
                     <span>MEMBER</span>
                   </div>
 
+                </div>
+              </div> 
+              
                 </div>
               </div>
             </div> {/* ◀ 무한 로딩을 유발했던 누락된 메탈 카드 닫는 태그 완벽 복원! */}

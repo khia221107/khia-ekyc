@@ -1,2 +1,0 @@
-# khia-ekyc
-khia-ekyc
